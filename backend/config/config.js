@@ -23,5 +23,6 @@ module.exports = {
     database: process.env.PROD_DB,
     host: process.env.DB_HOST,
     dialect: "mysql",
+    seederStorage: "json",
   },
 };
