@@ -15,6 +15,7 @@ Add .env file with database credentials. An example env file is included.
 ### Run
 
 ```
+cd backend
 yarn start
 ```
 
@@ -47,7 +48,7 @@ Device endpoints
 
 ### Test
 
-Test
+Run in the backend directory
 
 ```
 yarn test
