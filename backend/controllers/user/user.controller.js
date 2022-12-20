@@ -35,7 +35,7 @@ const register = async (req, res) => {
     });
 
     if (user) {
-      throw new httpError("User already exists with same email", 400);
+      throw new httpError("User with same email already exists!", 400);
     }
     const passwordHash = await bcrypt.hash(password, SALTROUNDS);
     const now = new Date();
@@ -57,7 +57,8 @@ const register = async (req, res) => {
     delete newUser.dataValues.password;
     res.send({ user: newUser, token });
   } catch (error) {
-    if (error.name === "httpError") res.status(error.code).send(error.message);
+    if (error.name === "httpError")
+      res.status(error.code).send({ message: error.message });
     else res.status(500).send();
   }
 };
@@ -86,7 +87,8 @@ const login = async (req, res) => {
     delete user.password;
     res.send({ user, token });
   } catch (error) {
-    if (error.name === "httpError") res.status(error.code).send(error.message);
+    if (error.name === "httpError")
+      res.status(error.code).send({ message: error.message });
     else res.status(500).send();
   }
 };
@@ -100,7 +102,7 @@ const profile = async (req, res) => {
     });
     res.send({ user });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send();
   }
 };
 
@@ -111,7 +113,7 @@ const changePassword = async (req, res) => {
       where: { id },
     });
 
-    const match = await bcrypt.compare(req.body.password, user.password);
+    const match = await bcrypt.compare(req.body.oldPassword, user.password);
     if (!match) {
       throw new httpError("Old password is incorrect", 409);
     }
@@ -123,13 +125,13 @@ const changePassword = async (req, res) => {
     );
     res.send({});
   } catch (error) {
-    if (error.name === "httpError") res.status(error.code).send(error.message);
+    if (error.name === "httpError")
+      res.status(error.code).send({ message: error.message });
     else res.status(500).send();
   }
 };
 
 const createToken = (payload) => {
-  console.log(process.env.SECRET);
   return jwt.sign(payload, process.env.SECRET, { expiresIn: 15 * 60 });
 };
 

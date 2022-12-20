@@ -20,7 +20,10 @@ const getAll = async (req, res) => {
 const getOne = async (req, res) => {
   try {
     const { id } = req.params;
-    const device = await Device.findOne({ where: { id }, include: Device_logs });
+    const device = await Device.findOne({
+      where: { id },
+      include: Device_logs,
+    });
     res.send({ device });
   } catch (error) {
     console.log(error);
@@ -45,8 +48,8 @@ const addOne = async (req, res) => {
 const updateOne = async (req, res) => {
   try {
     const { id } = req.params;
-    await Device.update(req.body, { where: { id } });
-    res.send({});
+    const device = await Device.update(req.body, { where: { id } });
+    res.status(201).send({ device });
   } catch (error) {
     console.log(error);
     res.status(500).send();

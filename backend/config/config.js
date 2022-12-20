@@ -16,6 +16,7 @@ module.exports = {
     database: process.env.TEST_DB,
     host: process.env.DB_HOST,
     dialect: "mysql",
+    logging: false,
   },
   production: {
     username: process.env.DB_USER,

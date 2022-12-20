@@ -7,7 +7,7 @@ router.post("/register", user.register);
 
 router.post("/login", user.login);
 
-router.put("/change-password", user.changePassword);
+router.put("/change-password", validateUser, user.changePassword);
 
 router.get("/profile", validateUser, user.profile);
 
