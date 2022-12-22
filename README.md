@@ -1,5 +1,14 @@
 # Cookstove Platform
 
+## Client
+
+IP 
+```
+139.144.74.170
+```
+
+---
+
 ## Backend
 
 ### Setup
