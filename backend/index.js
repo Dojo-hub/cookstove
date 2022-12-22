@@ -3,10 +3,15 @@ const logger = require("morgan");
 const auth = require("./routes/auth");
 const devices = require("./routes/devices");
 const validateUser = require("./middleware/validatejwt");
+const cors = require("cors")({
+  origin: "*",
+});
 
 const app = express();
 
 const PORT = 3000;
+
+app.use(cors);
 
 app.use(logger("dev"));
 

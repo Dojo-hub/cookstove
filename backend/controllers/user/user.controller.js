@@ -98,7 +98,10 @@ const profile = async (req, res) => {
     const { id } = req.user;
     const user = await db.User.scope("withoutPassword").findOne({
       where: { id },
-      include: db.Device,
+      include: {
+        model: db.Device,
+        as: "devices"
+      }
     });
     res.send({ user });
   } catch (error) {
