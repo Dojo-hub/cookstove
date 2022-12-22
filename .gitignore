@@ -5,3 +5,8 @@ node_modules
 sequelize-data.json
 
 coverage
+
+dist
+
+.parcel-cache
+yarn-error.log
