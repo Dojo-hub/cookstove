@@ -6,30 +6,34 @@ import { getLogs } from "../../api/device_logs";
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
   {
-    field: "name",
-    headerName: "Name",
+    field: "date",
+    headerName: "Date",
     width: 150,
   },
   {
-    field: "serialNumber",
-    headerName: "Serial Number",
+    field: "time",
+    headerName: "Time",
     width: 150,
   },
   {
-    field: "number",
-    headerName: "Number",
+    field: "weight",
+    headerName: "Weight",
     width: 110,
   },
   {
-    field: "simID",
-    headerName: "Sim ID",
+    field: "temperature",
+    headerName: "Temperature",
     width: 160,
   },
   {
-    field: "createdAt",
-    headerName: "Date Created",
+    field: "latitude",
+    headerName: "Latitude",
     width: 160,
-    valueGetter: (params) => `${new Date(params.row.createdAt).toDateString()}`,
+  },
+  {
+    field: "longitude",
+    headerName: "Longitude",
+    width: 160,
   },
 ];
 

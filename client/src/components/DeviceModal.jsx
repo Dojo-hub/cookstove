@@ -33,6 +33,7 @@ export default function DeviceModal({ open, setOpen, setReload }) {
       serialNumber: "",
       number: "",
       simID: "",
+      imei: "",
     },
     onSubmit: async (values) => {
       try {
@@ -58,6 +59,14 @@ export default function DeviceModal({ open, setOpen, setReload }) {
           <form onSubmit={formik.handleSubmit}>
             <Stack spacing={4} alignItems="center">
               <Typography variant="h5">Add Device</Typography>
+              <TextField
+                id="imei"
+                name="imei"
+                label="IMEI"
+                required
+                onChange={formik.handleChange}
+                value={formik.values.imei}
+              />
               <TextField
                 id="name"
                 name="name"

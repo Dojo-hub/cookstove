@@ -5,6 +5,7 @@ import { getOne } from "../../api/devices";
 import BackButton from "../../components/BackButton";
 import Loading from "../../components/Loading";
 import Logs from "./logs";
+import UpdateDevice from "./update";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,6 +65,7 @@ export default function details() {
         <Tabs value={value} onChange={handleChange} aria-label="device tabs">
           <Tab label="Details" {...a11yProps(0)} />
           <Tab label="Logs" {...a11yProps(1)} />
+          <Tab label="Settings" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -77,6 +79,12 @@ export default function details() {
               </Grid>
               <Grid item xs={6}>
                 <Typography>{device.name}</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography fontWeight={600}>IMEI:</Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography>{device.imei}</Typography>
               </Grid>
               <Grid item xs={6}>
                 <Typography fontWeight={600}>Serial Number:</Typography>
@@ -110,6 +118,9 @@ export default function details() {
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Logs deviceID={id} />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <UpdateDevice device={device} />
       </TabPanel>
     </Fragment>
   );

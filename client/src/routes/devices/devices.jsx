@@ -17,6 +17,11 @@ const columns = [
     width: 150,
   },
   {
+    field: "imei",
+    headerName: "IMEI",
+    width: 150,
+  },
+  {
     field: "serialNumber",
     headerName: "Serial Number",
     width: 150,

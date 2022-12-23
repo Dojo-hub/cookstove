@@ -7,7 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "parcel",
+    "start": "NODE_ENV=development parcel",
     "build": "parcel build"
   },
   "dependencies": {

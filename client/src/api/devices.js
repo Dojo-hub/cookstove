@@ -21,6 +21,11 @@ export function getOne(id) {
   return axiosInstance.get(`/${id}`);
 }
 
+export function updateDevice({id, ...rest}) {
+  delete rest.userID;
+  return axiosInstance.put(`/${id}`, {...rest});
+}
+
 export function addDevice(data) {
   return axiosInstance.post("/", data);
 }

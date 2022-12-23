@@ -22,7 +22,6 @@ const getOne = async (req, res) => {
     const { id } = req.params;
     const device = await Device.findOne({
       where: { id },
-      include: Device_logs,
     });
     res.send({ device });
   } catch (error) {

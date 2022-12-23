@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       serialNumber: DataTypes.STRING,
       number: DataTypes.STRING,
       simID: DataTypes.STRING,
+      imei: DataTypes.STRING,
     },
     {
       sequelize,
