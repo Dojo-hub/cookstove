@@ -20,3 +20,19 @@ export function login(data) {
 export function profile() {
   return axiosInstance.get("/profile");
 }
+
+export function getUsers() {
+  return axiosInstance.get("/admin/users");
+}
+
+export function addUser(data) {
+  return axiosInstance.post("/register", data);
+}
+
+export function getUser(id) {
+  return axiosInstance.get(`/admin/users/${id}`);
+}
+
+export function updateUser({ id, ...rest }) {
+  return axiosInstance.put(`/admin/users/${id}`, { ...rest });
+}

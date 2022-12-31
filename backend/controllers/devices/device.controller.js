@@ -32,8 +32,8 @@ const getOne = async (req, res) => {
 
 const addOne = async (req, res) => {
   try {
-    const { name, serialNumber, number, simID } = req.body;
-    if (!(name && serialNumber && number && simID))
+    const { name, serialNumber, number, simID, imei } = req.body;
+    if (!(name && serialNumber && number && simID && imei))
       throw new httpError("Missing required field!", 400);
     const payload = { ...req.body, userId: req.user.id };
     const device = await Device.create(payload);
@@ -67,13 +67,17 @@ const deleteOne = async (req, res) => {
 
 const createLog = async (req, res) => {
   try {
-    const serialNumber = req.body.serialNumber;
-    const device = await Device.findOne({ where: { serialNumber } });
+    const imei = req.body.imei;
+    if(!imei){
+      throw new httpError("IMEI is required", 400);
+    }
+    const device = await Device.findOne({ where: { imei } });
+    if(!device)throw new httpError("Device does not exist!", 400);
     const log = await device.createDevice_log(req.body);
     res.send({ log });
   } catch (error) {
-    console.log(error);
-    res.status(500).send();
+    if (error.name === "httpError") res.status(error.code).send(error.message);
+    else res.status(500).send();
   }
 };
 

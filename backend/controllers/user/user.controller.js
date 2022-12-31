@@ -10,16 +10,39 @@ const SALTROUNDS = 10;
 const allUsers = async (req, res) => {
   try {
     const page = req.params.page || 1;
-    const limit = 2;
+    const limit = 10;
     const users = await db.User.scope("withoutPassword").findAndCountAll({
-      order: [
-        ["createdAt", "DESC"],
-        ["firstName", "ASC"],
-      ],
+      where: { isSuperuser: false },
       offset: (page - 1) * limit,
       limit,
     });
     res.send({ users });
+  } catch (error) {
+    res.status(500).send();
+  }
+};
+
+const getUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await db.User.scope("withoutPassword").findOne({
+      where: { id },
+    });
+    res.send({ user });
+  } catch (error) {
+    res.status(500).send();
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    delete req.body.createdAt;
+    req.body.updatedAt = new Date();
+    const user = await db.User.update(req.body, {
+      where: { id },
+    });
+    res.status(201).send({ user });
   } catch (error) {
     res.status(500).send();
   }
@@ -38,11 +61,8 @@ const register = async (req, res) => {
       throw new httpError("User with same email already exists!", 400);
     }
     const passwordHash = await bcrypt.hash(password, SALTROUNDS);
-    const now = new Date();
     const payload = {
-      email,
-      firstName,
-      lastName,
+      ...req.body,
       password: passwordHash,
       isActive: true,
     };
@@ -100,8 +120,8 @@ const profile = async (req, res) => {
       where: { id },
       include: {
         model: db.Device,
-        as: "devices"
-      }
+        as: "devices",
+      },
     });
     res.send({ user });
   } catch (error) {
@@ -138,4 +158,12 @@ const createToken = (payload) => {
   return jwt.sign(payload, process.env.SECRET, { expiresIn: 15 * 60 });
 };
 
-module.exports = { login, register, changePassword, allUsers, profile };
+module.exports = {
+  login,
+  register,
+  changePassword,
+  getUser,
+  updateUser,
+  allUsers,
+  profile,
+};

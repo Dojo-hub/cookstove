@@ -1,7 +1,8 @@
 import { createBrowserRouter, Navigate, Outlet } from "react-router-dom";
 import Root from "./root";
 import Login from "./login";
-import { Devices, AddDevice, Details } from "./devices";
+import { Devices, Details } from "./devices";
+import { UserDetails, Users } from "./users";
 
 export default function Routes() {
   const user = !!localStorage.getItem("user");
@@ -23,9 +24,19 @@ export default function Routes() {
               path: "details/:id",
               element: <Details />,
             },
+          ],
+        },
+        {
+          path: "users",
+          element: <Outlet />,
+          children: [
             {
-              path: "add",
-              element: <AddDevice />,
+              path: "",
+              element: <Users />,
+            },
+            {
+              path: "details/:id",
+              element: <UserDetails />,
             },
           ],
         },
