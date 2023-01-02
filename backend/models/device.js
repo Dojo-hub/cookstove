@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Device.hasMany(models.Device_logs, {
         foreignKey: "deviceSerialNumber",
-        sourceKey: "serialNumber"
+        sourceKey: "serialNumber",
+        as: "logs",
       });
       Device.belongsTo(models.User, {
         foreignKey: "userId",

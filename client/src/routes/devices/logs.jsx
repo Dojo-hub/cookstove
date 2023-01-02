@@ -16,8 +16,8 @@ const columns = [
     width: 150,
   },
   {
-    field: "weight",
-    headerName: "Weight",
+    field: "load",
+    headerName: "Weight(kg)",
     width: 110,
   },
   {
@@ -46,7 +46,7 @@ export default function Logs({ deviceID }) {
       try {
         setLoading(true);
         const { data } = await getLogs(deviceID);
-        setRows(data.device_logs);
+        setRows(data.device.logs);
         setLoading(false);
       } catch (error) {
         setLoading(false);

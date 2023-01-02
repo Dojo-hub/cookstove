@@ -1,8 +1,6 @@
 const { Device, Device_logs } = require("../../models/index");
 const httpError = require("../../helpers/httpError");
 
-const SALTROUNDS = 10;
-
 const getAll = async (req, res) => {
   try {
     const devices = await Device.findAndCountAll({
@@ -13,6 +11,23 @@ const getAll = async (req, res) => {
     });
     res.send({ devices });
   } catch (error) {
+    res.status(500).send();
+  }
+};
+
+const getLogs = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const device = await Device.findOne({
+      where: { id },
+      include: {
+        model: Device_logs,
+        as: "logs",
+      },
+    });
+    res.send({ device });
+  } catch (error) {
+    console.log(error);
     res.status(500).send();
   }
 };
@@ -68,11 +83,11 @@ const deleteOne = async (req, res) => {
 const createLog = async (req, res) => {
   try {
     const imei = req.body.imei;
-    if(!imei){
+    if (!imei) {
       throw new httpError("IMEI is required", 400);
     }
     const device = await Device.findOne({ where: { imei } });
-    if(!device)throw new httpError("Device does not exist!", 400);
+    if (!device) throw new httpError("Device does not exist!", 400);
     const log = await device.createDevice_log(req.body);
     res.send({ log });
   } catch (error) {
@@ -81,4 +96,12 @@ const createLog = async (req, res) => {
   }
 };
 
-module.exports = { getAll, getOne, addOne, deleteOne, updateOne, createLog };
+module.exports = {
+  getAll,
+  getOne,
+  getLogs,
+  addOne,
+  deleteOne,
+  updateOne,
+  createLog,
+};

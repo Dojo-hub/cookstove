@@ -5,7 +5,16 @@ import Modal from "@mui/material/Modal";
 import { useFormik } from "formik";
 import MuiTextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Stack } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Stack,
+} from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { addUser } from "../api/user";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
@@ -26,6 +35,13 @@ export default function UserModal({ open, setOpen, setReload }) {
   const handleClose = () => setOpen(false);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -57,8 +73,8 @@ export default function UserModal({ open, setOpen, setReload }) {
       >
         <Box sx={style}>
           <form onSubmit={formik.handleSubmit}>
-            <Stack spacing={4} alignItems="center">
-              <Typography variant="h5">Add User</Typography>
+            <Stack spacing={3} alignItems="center">
+              <Typography variant="h5">User Details</Typography>
               <TextField
                 id="username"
                 name="userName"
@@ -91,15 +107,31 @@ export default function UserModal({ open, setOpen, setReload }) {
                 onChange={formik.handleChange}
                 value={formik.values.email}
               />
-              <TextField
-                id="password"
-                name="password"
-                label="Password"
-                type="passwords"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.password}
-              />
+              <FormControl fullWidth variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  name="password"
+                  id="outlined-adornment-password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Password"
+                />
+              </FormControl>
               {error.length > 0 && (
                 <Typography style={{ color: "red" }}>{error}</Typography>
               )}
@@ -109,7 +141,7 @@ export default function UserModal({ open, setOpen, setReload }) {
                 variant="contained"
                 type="submit"
               >
-                Submit
+                Add
               </LoadingButton>
             </Stack>
           </form>
