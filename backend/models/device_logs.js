@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   Device_logs.init(
     {
       timestamp: DataTypes.DATE,
-      load: DataTypes.DECIMAL,
-      temperature: DataTypes.DECIMAL,
+      load: DataTypes.STRING,
+      temperature: DataTypes.STRING,
       longitude: DataTypes.STRING,
       latitude: DataTypes.STRING,
     },
