@@ -82,17 +82,28 @@ const deleteOne = async (req, res) => {
 
 const createLog = async (req, res) => {
   try {
-    const imei = req.body.imei;
+    const { imei, timestamp } = req.body;
     if (!imei) {
       throw new httpError("IMEI is required", 400);
     }
     const device = await Device.findOne({ where: { imei } });
     if (!device) throw new httpError("Device does not exist!", 400);
-    const log = await device.createDevice_log(req.body);
+    const regex = /\b\d+\/\d+\/\d+,\d+:\d+:\d+\b/;
+    const matches = regex.test(timestamp);
+    if (!matches)
+      throw new httpError(
+        "Incorrect timestamp format. Expected yy/mm/dd,hh:mm:ss",
+        400
+      );
+    req.body.timestamp = new Date(Date.parse("20".concat(timestamp)));
+    const log = await device.createLog(req.body);
     res.send({ log });
   } catch (error) {
     if (error.name === "httpError") res.status(error.code).send(error.message);
-    else res.status(500).send();
+    else {
+      console.log(error);
+      res.status(500).send();
+    }
   }
 };
 
