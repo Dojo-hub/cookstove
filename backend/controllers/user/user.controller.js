@@ -34,6 +34,20 @@ const getUser = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    if (!req.user.admin)
+      throw new httpError("Only super admin can delete user", 403);
+    const { id } = req.params;
+    const user = await db.User.destroy({ where: { id } });
+    res.send({ user });
+  } catch (error) {
+    if (error.name === "httpError")
+      res.status(error.code).send({ message: error.message });
+    else res.status(500).send();
+  }
+};
+
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -163,6 +177,7 @@ module.exports = {
   register,
   changePassword,
   getUser,
+  deleteUser,
   updateUser,
   allUsers,
   profile,

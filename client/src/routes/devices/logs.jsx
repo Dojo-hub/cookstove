@@ -9,11 +9,13 @@ const columns = [
     field: "date",
     headerName: "Date",
     width: 150,
+    valueGetter: (params) => `${new Date(params.row.timestamp).toLocaleDateString()}`,
   },
   {
     field: "time",
     headerName: "Time",
     width: 150,
+    valueGetter: (params) => `${new Date(params.row.timestamp).toLocaleTimeString()}`,
   },
   {
     field: "load",

@@ -1,11 +1,22 @@
-import { Box, Card, Grid, Tab, Tabs, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useContext } from "react";
 import { Fragment, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { getUser } from "../../api/user";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { deleteUser, getUser } from "../../api/user";
+import { UserContext } from "../../App";
 import BackButton from "../../components/BackButton";
 import Loading from "../../components/Loading";
 import UpdateUser from "./update";
-import UpdateDevice from "./update";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -32,16 +43,23 @@ function a11yProps(index) {
 
 export default function details() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState(0);
+  const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const auth = useContext(UserContext);
 
   useEffect(() => {
     const fetchDevice = async () => {
       try {
         setLoading(true);
         const { data } = await getUser(id);
+        if (!data.user) navigate("/users");
         setUser(data.user);
         setLoading(false);
       } catch (error) {
@@ -54,6 +72,21 @@ export default function details() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleDelete = async () => {
+    if (email !== user.email) {
+      setDeleteError(true);
+      return;
+    }
+    try {
+      setDeleteBtnLoading(true);
+      await deleteUser(id);
+      navigate("/users");
+    } catch (error) {
+      setDeleteBtnLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -110,7 +143,41 @@ export default function details() {
         </Card>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <UpdateUser user={user} />
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <UpdateUser user={user} />
+          </Grid>
+          {auth.user.user.isSuperuser && (
+            <Grid item xs={12} md={4}>
+              <Card sx={{ p: 2, mt: 4, width: "100%" }}>
+                <Stack spacing={2}>
+                  <Typography variant="h5" textAlign="center">
+                    Delete User
+                  </Typography>
+                  <TextField
+                    fullWidth
+                    label="Enter user email to delete"
+                    onChange={(e) => {
+                      setDeleteError(false);
+                      setEmail(e.target.value);
+                    }}
+                    error={deleteError}
+                    helperText={deleteError ? "Enter correct user email" : ""}
+                    value={email}
+                  />
+                  <LoadingButton
+                    loading={deleteBtnLoading}
+                    variant="contained"
+                    color="error"
+                    onClick={handleDelete}
+                  >
+                    Delete
+                  </LoadingButton>
+                </Stack>
+              </Card>
+            </Grid>
+          )}
+        </Grid>
       </TabPanel>
     </Fragment>
   );

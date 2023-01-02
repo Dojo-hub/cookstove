@@ -32,7 +32,7 @@ export default function UpdateUser({ user }) {
   }, [formik.values]);
 
   return (
-    <Card sx={{ p: 2, mt: 4, maxWidth: 600 }}>
+    <Card sx={{ p: 2, mt: 4, width: "100%" }}>
       <form onSubmit={formik.handleSubmit}>
         <Stack spacing={2} alignItems="center">
           <Typography variant="h5">Update User</Typography>

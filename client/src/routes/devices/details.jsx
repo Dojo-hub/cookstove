@@ -80,6 +80,7 @@ export default function details() {
       await deleteDevice(id);
       navigate("/devices");
     } catch (error) {
+      setDeleteBtnLoading(false);
       console.log(error);
     }
   };
@@ -155,8 +156,8 @@ export default function details() {
           <Grid item xs={12} md={4}>
             <Card sx={{ p: 2, mt: 4, width: "100%" }}>
               <Stack spacing={2}>
-                <Typography variant="h5">
-                  Delete Device.
+                <Typography variant="h5" textAlign="center">
+                  Delete Device
                 </Typography>
                 <TextField
                   fullWidth

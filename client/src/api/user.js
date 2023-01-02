@@ -36,3 +36,7 @@ export function getUser(id) {
 export function updateUser({ id, ...rest }) {
   return axiosInstance.put(`/admin/users/${id}`, { ...rest });
 }
+
+export function deleteUser(id) {
+  return axiosInstance.delete(`/admin/users/${id}`);
+}
