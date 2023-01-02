@@ -13,6 +13,4 @@ router.put("/:id", device.updateOne);
 
 router.delete("/:id", device.deleteOne);
 
-router.post("/logs", device.createLog);
-
 module.exports = router;

@@ -21,7 +21,7 @@ app.use(express.json());
 
 app.use("/", auth);
 app.use("/devices", validateUser, devices);
-app.use("/logs", validateUser, logs);
+app.use("/logs", logs);
 app.use("/admin/users", validateUser, users);
 
 if (process.env.NODE_ENV !== "test")
