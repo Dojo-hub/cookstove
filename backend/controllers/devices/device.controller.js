@@ -84,7 +84,7 @@ const createLog = async (req, res) => {
   try {
     const { imei, timestamp } = req.body;
     if (!imei) {
-      throw new httpError("IMEI is required", 400);
+      throw new httpError("imei is required!", 400);
     }
     const device = await Device.findOne({ where: { imei } });
     if (!device) throw new httpError("Device does not exist!", 400);
@@ -97,7 +97,7 @@ const createLog = async (req, res) => {
       );
     req.body.timestamp = new Date(Date.parse("20".concat(timestamp)));
     const log = await device.createLog(req.body);
-    res.send({ log });
+    res.send({ msg: "Log added successfully" });
   } catch (error) {
     if (error.name === "httpError") res.status(error.code).send(error.message);
     else {
