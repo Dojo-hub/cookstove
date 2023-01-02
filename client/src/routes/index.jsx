@@ -13,6 +13,10 @@ export default function Routes() {
       element: user ? <Root /> : <Navigate to="/login" />,
       children: [
         {
+          path: "",
+          element: <Navigate to="/devices" />,
+        },
+        {
           path: "devices",
           element: <Outlet />,
           children: [
