@@ -18,7 +18,7 @@ const columns = [
     valueGetter: (params) => `${new Date(params.row.timestamp).toLocaleTimeString()}`,
   },
   {
-    field: "load",
+    field: "weight",
     headerName: "Weight(kg)",
     width: 110,
   },
