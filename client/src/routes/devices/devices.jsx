@@ -3,11 +3,11 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import { profile } from "../../api/user";
 import { useNavigate } from "react-router-dom";
 import { Stack } from "@mui/system";
 import AddIcon from "@mui/icons-material/Add";
 import DeviceModal from "../../components/DeviceModal";
+import { getAll } from "../../api/devices";
 
 const columns = [
   { field: "id", headerName: "ID", width: 90 },
@@ -55,8 +55,8 @@ export default function Devices() {
     const fetchDevices = async () => {
       try {
         setLoading(true);
-        const { data } = await profile();
-        setRows(data.user.devices);
+        const { data } = await getAll();
+        setRows(data.devices.rows);
         setLoading(false);
       } catch (error) {
         setLoading(false);

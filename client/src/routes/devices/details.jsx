@@ -1,7 +1,17 @@
-import { Box, Card, Grid, Tab, Tabs, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Tab,
+  Tabs,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
-import { getOne } from "../../api/devices";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { deleteDevice, getOne } from "../../api/devices";
 import BackButton from "../../components/BackButton";
 import Loading from "../../components/Loading";
 import Logs from "./logs";
@@ -32,10 +42,14 @@ function a11yProps(index) {
 
 export default function details() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [device, setDevice] = useState({});
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState(0);
+  const [deviceName, setDeviceName] = useState("");
+  const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState(false);
 
   useEffect(() => {
     const fetchDevice = async () => {
@@ -54,6 +68,20 @@ export default function details() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+  };
+
+  const handleDelete = async () => {
+    if (deviceName !== device.name) {
+      setDeleteError(true);
+      return;
+    }
+    try {
+      setDeleteBtnLoading(true);
+      await deleteDevice(id);
+      navigate("/devices");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -120,7 +148,39 @@ export default function details() {
         <Logs deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <UpdateDevice device={device} />
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <UpdateDevice device={device} />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Card sx={{ p: 2, mt: 4, width: "100%" }}>
+              <Stack spacing={2}>
+                <Typography variant="h5">
+                  Delete Device.
+                </Typography>
+                <TextField
+                  fullWidth
+                  label="Enter device name to delete"
+                  onChange={(e) => {
+                    setDeleteError(false);
+                    setDeviceName(e.target.value);
+                  }}
+                  error={deleteError}
+                  helperText={deleteError ? "Enter correct device name" : ""}
+                  value={deviceName}
+                />
+                <LoadingButton
+                  loading={deleteBtnLoading}
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </LoadingButton>
+              </Stack>
+            </Card>
+          </Grid>
+        </Grid>
       </TabPanel>
     </Fragment>
   );
