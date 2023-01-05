@@ -42,13 +42,16 @@ const columns = [
 export default function Logs({ deviceID }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchDeviceLogs = async () => {
       try {
         setLoading(true);
-        const { data } = await getLogs(deviceID);
+        const { data } = await getLogs(deviceID, `?page=${page}`);
         setRows(data.device.logs);
+        setCount(data.logcount);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -56,19 +59,23 @@ export default function Logs({ deviceID }) {
       }
     };
     fetchDeviceLogs();
-  }, []);
+  }, [page]);
 
   return (
     <Box mt={4}>
       <Typography variant="h4">Logs</Typography>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box sx={{ width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
           loading={loading}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={50}
+          autoHeight
+          rowsPerPageOptions={[50]}
+          paginationMode="server"
+          rowCount={count}
           checkboxSelection
+          onPageChange={(page, details) => setPage(page)}
           disableSelectionOnClick
         />
       </Box>

@@ -52,13 +52,16 @@ export default function Users() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(0);
+  const [page, setPage] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         setLoading(true);
-        const { data } = await getUsers();
+        const { data } = await getUsers(`?page=${page}`);
         setRows(data.users.rows);
+        setCount(data.users.count);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -66,7 +69,7 @@ export default function Users() {
       }
     };
     fetchUsers();
-  }, [reload]);
+  }, [reload, page]);
 
   return (
     <Box>
@@ -80,16 +83,20 @@ export default function Users() {
           Add User
         </Button>
       </Stack>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box sx={{ width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
           loading={loading}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={2}
+          rowsPerPageOptions={[50]}
+          autoHeight
+          paginationMode="server"
           checkboxSelection
           disableSelectionOnClick
           experimentalFeatures={{ newEditingApi: true }}
+          rowCount={count}
+          onPageChange={(page, details) => setPage(page)}
           onRowClick={(params) =>
             navigate(`/users/details/${params.id}?name=${params.row.firstName}%20${params.row.lastName}`)
           }

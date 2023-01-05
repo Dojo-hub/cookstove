@@ -50,13 +50,16 @@ export default function Devices() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [reload, setReload] = useState(0);
+  const [page, setPage] = useState(0);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     const fetchDevices = async () => {
       try {
         setLoading(true);
-        const { data } = await getAll();
+        const { data } = await getAll(`?page=${page}`);
         setRows(data.devices.rows);
+        setCount(data.devices.count);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -64,7 +67,7 @@ export default function Devices() {
       }
     };
     fetchDevices();
-  }, [reload]);
+  }, [reload, page]);
 
   return (
     <Box>
@@ -78,15 +81,19 @@ export default function Devices() {
           Add Device
         </Button>
       </Stack>
-      <Box sx={{ height: 400, width: "100%" }}>
+      <Box sx={{ width: "100%" }}>
         <DataGrid
           rows={rows}
           columns={columns}
           loading={loading}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={50}
+          rowsPerPageOptions={[50]}
+          autoHeight
+          rowCount={count}
+          paginationMode="server"
           checkboxSelection
           disableSelectionOnClick
+          onPageChange={(page, details) => setPage(page)}
           experimentalFeatures={{ newEditingApi: true }}
           onRowClick={(params) =>
             navigate(`/devices/details/${params.id}?name=${params.row.name}`)

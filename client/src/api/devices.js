@@ -13,8 +13,8 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export function getAll() {
-  return axiosInstance.get("/");
+export function getAll(query) {
+  return axiosInstance.get(`/${query}`);
 }
 
 export function getOne(id) {

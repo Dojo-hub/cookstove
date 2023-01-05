@@ -21,8 +21,8 @@ export function profile() {
   return axiosInstance.get("/profile");
 }
 
-export function getUsers() {
-  return axiosInstance.get("/admin/users");
+export function getUsers(query) {
+  return axiosInstance.get(`/admin/users${query}`);
 }
 
 export function addUser(data) {

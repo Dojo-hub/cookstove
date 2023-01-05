@@ -13,6 +13,6 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-export function getLogs(deviceID) {
-    return axiosInstance.get(`/${deviceID}`);
+export function getLogs(deviceID, query) {
+    return axiosInstance.get(`/${deviceID}${query}`);
 }
