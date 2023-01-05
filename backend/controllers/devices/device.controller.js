@@ -1,13 +1,17 @@
-const { Device, Device_logs } = require("../../models/index");
+const { Device, Device_logs, log_files } = require("../../models/index");
 const httpError = require("../../helpers/httpError");
 
 const getAll = async (req, res) => {
   try {
+    const page = req.query.page || 0;
+    const limit = 50;
     const devices = await Device.findAndCountAll({
       order: [
         ["createdAt", "DESC"],
         ["name", "ASC"],
       ],
+      limit,
+      offset: page * limit,
     });
     res.send({ devices });
   } catch (error) {
@@ -17,15 +21,20 @@ const getAll = async (req, res) => {
 
 const getLogs = async (req, res) => {
   try {
+    const page = req.query.page || 0;
+    const limit = 50;
     const { id } = req.params;
     const device = await Device.findOne({
       where: { id },
       include: {
         model: Device_logs,
         as: "logs",
+        limit,
+        offset: page * limit,
       },
     });
-    res.send({ device });
+    const logcount = await device.countLogs();
+    res.send({ device, logcount });
   } catch (error) {
     console.log(error);
     res.status(500).send();
@@ -80,30 +89,18 @@ const deleteOne = async (req, res) => {
   }
 };
 
-const createLog = async (req, res) => {
+const saveLogFile = async (req, res) => {
+  const file = req.files[0];
+
   try {
-    const { imei, timestamp } = req.body;
-    if (!imei) {
-      throw new httpError("imei is required!", 400);
+    if (!file) {
+      throw new Error("No file");
     }
-    const device = await Device.findOne({ where: { imei } });
-    if (!device) throw new httpError("Device does not exist!", 400);
-    const regex = /\b\d+\/\d+\/\d+,\d+:\d+:\d+\b/;
-    const matches = regex.test(timestamp);
-    if (!matches)
-      throw new httpError(
-        "Incorrect timestamp format. Expected yy/mm/dd,hh:mm:ss",
-        400
-      );
-    req.body.timestamp = new Date(Date.parse("20".concat(timestamp)));
-    const log = await device.createLog(req.body);
-    res.send({ msg: "Log added successfully" });
+    await log_files.create({ name: file.filename, parsed: false });
+    res.send({ msg: "File uploaded successfully" });
   } catch (error) {
-    if (error.name === "httpError") res.status(error.code).send(error.message);
-    else {
-      console.log(error);
-      res.status(500).send();
-    }
+    console.log(error);
+    res.sendStatus(500);
   }
 };
 
@@ -114,5 +111,5 @@ module.exports = {
   addOne,
   deleteOne,
   updateOne,
-  createLog,
+  saveLogFile,
 };

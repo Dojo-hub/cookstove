@@ -9,11 +9,11 @@ const SALTROUNDS = 10;
 
 const allUsers = async (req, res) => {
   try {
-    const page = req.params.page || 1;
-    const limit = 10;
+    const page = req.query.page || 0;
+    const limit = 50;
     const users = await db.User.scope("withoutPassword").findAndCountAll({
       where: { isSuperuser: false },
-      offset: (page - 1) * limit,
+      offset: page * limit,
       limit,
     });
     res.send({ users });
