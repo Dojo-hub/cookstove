@@ -88,7 +88,7 @@ export default function Users() {
           rows={rows}
           columns={columns}
           loading={loading}
-          pageSize={2}
+          pageSize={50}
           rowsPerPageOptions={[50]}
           autoHeight
           paginationMode="server"
