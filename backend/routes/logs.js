@@ -4,8 +4,9 @@ const multer = require("multer");
 const router = express.Router();
 const device = require("../controllers/devices/device.controller.js");
 const validateUser = require("../middleware/validatejwt");
+const { Device } = require("../models/index");
 
-var storage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, path.join(__dirname, "../uploads/logs"));
   },
@@ -14,7 +15,22 @@ var storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const fileFilter = async (req, file, cb) => {
+  try {
+    const device = await Device.findOne({
+      where: {
+        imei: file.originalname.substring(0, file.originalname.indexOf(".")),
+      },
+    });
+
+    if (device) cb(null, true);
+    else cb(null, false);
+  } catch (error) {
+    cb(error);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
 
 router.post("/", upload.any(), device.saveLogFile);
 

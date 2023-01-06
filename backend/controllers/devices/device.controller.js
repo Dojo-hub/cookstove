@@ -96,7 +96,15 @@ const saveLogFile = async (req, res) => {
     if (!file) {
       throw new Error("No file");
     }
-    await log_files.create({ name: file.filename, parsed: false });
+    const device = file.originalname.substring(
+      0,
+      file.originalname.indexOf(".")
+    );
+    await log_files.create({
+      name: file.filename,
+      parsed: false,
+      device,
+    });
     res.send({ msg: "File uploaded successfully" });
   } catch (error) {
     console.log(error);

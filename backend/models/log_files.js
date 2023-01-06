@@ -15,7 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   log_files.init({
     name: DataTypes.STRING,
-    parsed: DataTypes.BOOLEAN
+    parsed: DataTypes.BOOLEAN,
+    device: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'log_files',
