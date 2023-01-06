@@ -22,7 +22,7 @@ const getAll = async (req, res) => {
 const getLogs = async (req, res) => {
   try {
     const page = req.query.page || 0;
-    const limit = 50;
+    const limit = 100;
     const { id } = req.params;
     const device = await Device.findOne({
       where: { id },
@@ -31,6 +31,7 @@ const getLogs = async (req, res) => {
         as: "logs",
         limit,
         offset: page * limit,
+        order: [["timestamp", "DESC"]],
       },
     });
     const logcount = await device.countLogs();

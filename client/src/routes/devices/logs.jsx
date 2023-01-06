@@ -81,9 +81,9 @@ export default function Logs({ deviceID }) {
           rows={rows}
           columns={columns}
           loading={loading}
-          pageSize={50}
+          pageSize={100}
           autoHeight
-          rowsPerPageOptions={[50]}
+          rowsPerPageOptions={[100]}
           paginationMode="server"
           rowCount={count}
           checkboxSelection
