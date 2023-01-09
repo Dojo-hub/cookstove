@@ -113,6 +113,22 @@ const saveLogFile = async (req, res) => {
   }
 };
 
+const saveJsonLog = async (req, res) => {
+  try {
+    const { imei, timestamp } = req.body;
+    if (!imei) throw new httpError("imei is required.", 409);
+    const device = await Device.findOne({ where: { imei } });
+    if (!device) throw new httpError(`No device exists with imei ${imei}`, 409);
+    req.body.timestamp = new Date(timestamp * 1000);
+    await device.createLog(req.body);
+    res.send({ msg: "File uploaded successfully" });
+  } catch (error) {
+    console.log(error);
+    if (error.name === "httpError") res.status(error.code).send(error.message);
+    else res.sendStatus(500);
+  }
+};
+
 module.exports = {
   getAll,
   getOne,
@@ -120,5 +136,6 @@ module.exports = {
   addOne,
   deleteOne,
   updateOne,
+  saveJsonLog,
   saveLogFile,
 };

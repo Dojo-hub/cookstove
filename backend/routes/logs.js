@@ -34,6 +34,8 @@ const upload = multer({ storage, fileFilter });
 
 router.post("/", upload.any(), device.saveLogFile);
 
+router.post("/json", device.saveJsonLog);
+
 router.get("/:id", validateUser, device.getLogs);
 
 module.exports = router;

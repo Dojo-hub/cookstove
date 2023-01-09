@@ -52,6 +52,7 @@ const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
     delete req.body.createdAt;
+    delete req.body.password;
     req.body.updatedAt = new Date();
     const user = await db.User.update(req.body, {
       where: { id },
