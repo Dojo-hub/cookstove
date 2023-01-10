@@ -93,7 +93,6 @@ export default function UpdateDevice({ device }) {
           )}
           <LoadingButton
             loading={loading}
-            loadingPosition="start"
             variant="contained"
             type="submit"
             disabled={!change}
