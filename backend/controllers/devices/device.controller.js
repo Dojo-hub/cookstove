@@ -35,7 +35,7 @@ const getLogs = async (req, res) => {
     };
     if (isValidDate(startDate) && isValidDate(endDate)) {
       include.where = {
-        timestamp: { [Op.gt]: new Date(startDate), [Op.lt]: new Date(endDate) },
+        timestamp: { [Op.gte]: new Date(startDate), [Op.lte]: new Date(endDate) },
       };
       delete include.limit;
     }
