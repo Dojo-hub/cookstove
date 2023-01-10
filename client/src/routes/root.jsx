@@ -15,6 +15,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import PersonIcon from "@mui/icons-material/Person";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import DevicesIcon from "@mui/icons-material/Devices";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
@@ -64,6 +65,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
+
+const icons = [<DashboardIcon />, <DevicesIcon />, <PersonIcon />];
 
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
@@ -163,7 +166,7 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Devices", "Users"].map((text, index) => (
+          {["Dashboard", "Devices", "Users"].map((text, index) => (
             <ListItem
               key={text}
               onClick={() => navigate(`/${text.toLowerCase()}`)}
@@ -174,9 +177,7 @@ export default function PersistentDrawerLeft() {
                   `/${text.toLowerCase()}`
                 )}
               >
-                <ListItemIcon>
-                  {index % 2 === 0 ? <DevicesIcon /> : <PersonIcon />}
-                </ListItemIcon>
+                <ListItemIcon>{icons[index]}</ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>

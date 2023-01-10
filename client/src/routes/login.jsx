@@ -60,7 +60,6 @@ export default function Login() {
           {error.length > 0 && <Typography style={{ color: "red" }}>{error}</Typography>}
           <LoadingButton
             loading={loading}
-            loadingPosition="start"
             variant="contained"
             type="submit"
           >

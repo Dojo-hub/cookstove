@@ -3,6 +3,8 @@ import Root from "./root";
 import Login from "./login";
 import { Devices, Details } from "./devices";
 import { UserDetails, Users } from "./users";
+import Dashboard from "./dashboard/Dashboard";
+import Profile from "./profile";
 
 export default function Routes() {
   const user = !!localStorage.getItem("user");
@@ -14,7 +16,15 @@ export default function Routes() {
       children: [
         {
           path: "",
-          element: <Navigate to="/devices" />,
+          element: <Navigate to="/dashboard" />,
+        },
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
+        {
+          path: "profile",
+          element: <Profile />,
         },
         {
           path: "devices",
@@ -48,11 +58,11 @@ export default function Routes() {
     },
     {
       path: "login",
-      element: !user ? <Login /> : <Navigate to="/devices" />,
+      element: !user ? <Login /> : <Navigate to="/" />,
     },
     {
       path: "*",
-      element: <Navigate to="/devices" replace />,
+      element: <Navigate to="/" replace />,
     },
   ]);
 }

@@ -6,9 +6,19 @@ import { useFormik } from "formik";
 import MuiTextField from "@mui/material/TextField";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Stack } from "@mui/material";
+import { notification } from "antd";
 import { addDevice } from "../api/devices";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
+
+const openNotification = ({ message, description = "", type }) => {
+  notification.open({
+    type,
+    message,
+    description,
+    duration: 4,
+  });
+};
 
 const style = {
   position: "absolute",
@@ -39,9 +49,24 @@ export default function DeviceModal({ open, setOpen, setReload }) {
       try {
         setLoading(true);
         await addDevice(values);
+        openNotification({
+          message: "Device added successfully.",
+          type: "success",
+        });
+        formik.resetForm();
+        setLoading(false);
         handleClose();
         setReload((state) => state + 1);
       } catch (error) {
+        setLoading(false);
+        let description = "";
+        if (error.response.data.message)
+          description = error.response.data.message;
+        openNotification({
+          message: "Device not added.",
+          description,
+          type: "error",
+        });
         console.log(error);
       }
     },
@@ -104,7 +129,6 @@ export default function DeviceModal({ open, setOpen, setReload }) {
               )}
               <LoadingButton
                 loading={loading}
-                loadingPosition="start"
                 variant="contained"
                 type="submit"
               >

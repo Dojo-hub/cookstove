@@ -2,12 +2,23 @@
 
 ## Client
 
-IP 
+### Setup
+
+Install only client dependencies
+
 ```
-139.144.74.170
+yarn workspace client install
+```
+
+### Run
+
+```
+cd client
+yarn start
 ```
 
 ---
+
 
 ## Backend
 
@@ -28,32 +39,10 @@ cd backend
 yarn start
 ```
 
-### Endpoints
 
 Server is exposed on
 `localhost:3000`
 
-Authentication endpoints
-
-`POST /register`
-
-`POST /login`
-
-`PUT /change-password`
-
-`GET /profile`
-
-Device endpoints
-
-`GET /devices - get all devices`
-
-`GET /devices/:id - get device by id`
-
-`PUT /devices/:id - update device`
-
-`POST /devices - add a new device`
-
-`DELETE /devices/:id - delete a device`
 
 ### Test
 

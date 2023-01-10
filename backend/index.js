@@ -5,6 +5,7 @@ const auth = require("./routes/auth");
 const devices = require("./routes/devices");
 const users = require("./routes/users");
 const logs = require("./routes/logs");
+const stats = require("./routes/stats");
 const validateUser = require("./middleware/validatejwt");
 const cors = require("cors")({
   origin: "*",
@@ -27,6 +28,7 @@ app.use("/", auth);
 app.use("/devices", validateUser, devices);
 app.use("/logs", logs);
 app.use("/admin/users", validateUser, users);
+app.use("/stats", validateUser, stats);
 
 if (process.env.NODE_ENV !== "test")
   app.listen(PORT, () => {

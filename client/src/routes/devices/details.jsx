@@ -11,11 +11,24 @@ import {
 } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { notification } from "antd";
 import { deleteDevice, getOne } from "../../api/devices";
 import BackButton from "../../components/BackButton";
 import Loading from "../../components/Loading";
+import Graph from "./graph";
 import Logs from "./logs";
 import UpdateDevice from "./update";
+
+const TextField = (props) => <MuiTextField fullWidth {...props} />;
+
+const openNotification = ({ message, description = "", type }) => {
+  notification.open({
+    type,
+    message,
+    description,
+    duration: 4,
+  });
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -78,9 +91,14 @@ export default function details() {
     try {
       setDeleteBtnLoading(true);
       await deleteDevice(id);
+      openNotification({
+        message: "Device deleted successfuly",
+        type: "success",
+      });
       navigate("/devices");
     } catch (error) {
       setDeleteBtnLoading(false);
+      openNotification({ message: "Device not deleted", type: "error" });
       console.log(error);
     }
   };
@@ -94,7 +112,8 @@ export default function details() {
         <Tabs value={value} onChange={handleChange} aria-label="device tabs">
           <Tab label="Details" {...a11yProps(0)} />
           <Tab label="Logs" {...a11yProps(1)} />
-          <Tab label="Settings" {...a11yProps(2)} />
+          <Tab label="Graphs" {...a11yProps(2)} />
+          <Tab label="Settings" {...a11yProps(3)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -149,6 +168,9 @@ export default function details() {
         <Logs deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={2}>
+        <Graph deviceID={id} />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
             <UpdateDevice device={device} />

@@ -1,5 +1,7 @@
 const { Device, Device_logs, log_files } = require("../../models/index");
 const httpError = require("../../helpers/httpError");
+const { Op } = require("sequelize");
+const isValidDate = require("../../helpers/checkdate");
 
 const getAll = async (req, res) => {
   try {
@@ -21,18 +23,25 @@ const getAll = async (req, res) => {
 
 const getLogs = async (req, res) => {
   try {
-    const page = req.query.page || 0;
     const limit = 100;
     const { id } = req.params;
+    const { page = 0, startDate, endDate } = req.query;
+    const include = {
+      model: Device_logs,
+      as: "logs",
+      limit,
+      offset: page * limit,
+      order: [["timestamp", "DESC"]],
+    };
+    if (isValidDate(startDate) && isValidDate(endDate)) {
+      include.where = {
+        timestamp: { [Op.gt]: new Date(startDate), [Op.lt]: new Date(endDate) },
+      };
+      delete include.limit;
+    }
     const device = await Device.findOne({
       where: { id },
-      include: {
-        model: Device_logs,
-        as: "logs",
-        limit,
-        offset: page * limit,
-        order: [["timestamp", "DESC"]],
-      },
+      include,
     });
     const logcount = await device.countLogs();
     res.send({ device, logcount });
@@ -60,11 +69,14 @@ const addOne = async (req, res) => {
     const { name, serialNumber, number, simID, imei } = req.body;
     if (!(name && serialNumber && number && simID && imei))
       throw new httpError("Missing required field!", 400);
+    const deviceExists = await Device.findOne({ where: { serialNumber } });
+    if (deviceExists) throw new httpError("Duplicate serial number", 409);
     const payload = { ...req.body, userId: req.user.id };
     const device = await Device.create(payload);
     res.send({ device });
   } catch (error) {
-    if (error.name === "httpError") res.status(error.code).send(error.message);
+    if (error.name === "httpError")
+      res.status(error.code).send({ message: error.message });
     else res.status(500).send();
   }
 };
