@@ -35,16 +35,23 @@ const getLogs = async (req, res) => {
     };
     if (isValidDate(startDate) && isValidDate(endDate)) {
       include.where = {
-        timestamp: { [Op.gte]: new Date(startDate), [Op.lte]: new Date(endDate) },
+        timestamp: {
+          [Op.gte]: new Date(startDate),
+          [Op.lte]: new Date(endDate),
+        },
       };
       delete include.limit;
     }
+    if (startDate === "undefined" || endDate === "undefined")
+      delete include.limit;
     const device = await Device.findOne({
       where: { id },
       include,
     });
-    const logcount = await device.countLogs();
-    res.send({ device, logcount });
+    if (device) {
+      const logcount = await device.countLogs();
+      res.send({ device, logcount });
+    } else res.send({ device: { logs: [] }, logcount: 0 });
   } catch (error) {
     console.log(error);
     res.status(500).send();
