@@ -53,7 +53,7 @@ const columns = [
 
 export default function Logs({ deviceID }) {
   const [rows, setRows] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(0);
   const [count, setCount] = useState(0);
 

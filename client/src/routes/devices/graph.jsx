@@ -2,15 +2,13 @@ import { Card, CircularProgress, Stack } from "@mui/material";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { DatePicker } from "antd";
-import { Chart } from "react-google-charts";
+import { DualAxes } from "@ant-design/plots";
 import { getLogs } from "../../api/device_logs";
 
 const { RangePicker } = DatePicker;
 
-const emptyrow = [format(new Date(), "dd/mm/yyyy"), 0, 0];
-
 export default function Graph({ deviceID }) {
-  const [data, setData] = useState([emptyrow]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dates, setDates] = useState([]);
 
@@ -22,16 +20,15 @@ export default function Graph({ deviceID }) {
           deviceID,
           `?startDate=${dates[0]}&endDate=${dates[1]}`
         );
-        const rows = data.device.logs.map((e) => [
-          format(new Date(e.timestamp), "dd/mm/yyyy"),
-          Number(e.weight),
-          Number(e.temperature),
-        ]);
-        if (data.device.logs.length === 0) setData([emptyrow]);
-        else setData(rows);
+        const rows = data.device.logs.map((e) => ({
+          day: e.timestamp,
+          weight: Number(e.weight),
+          temperature: Number(e.temperature),
+        }));
+        setData(rows);
         setLoading(false);
       } catch (error) {
-        setData([emptyrow]);
+        setData([]);
         setLoading(false);
         console.log(error);
       }
@@ -39,26 +36,22 @@ export default function Graph({ deviceID }) {
     fetchDeviceLogs();
   }, [dates]);
 
+  const config = {
+    data: [data, data],
+    xField: "day",
+    yField: ["temperature", "weight"],
+    xAxis: {
+      type: "time",
+    },
+  };
+
   return (
     <Card sx={{ p: 2, mt: 2 }}>
       <Stack alignItems="end">
         <RangePicker onChange={(dates, dateStrings) => setDates(dateStrings)} />
       </Stack>
       <br />
-      <Chart
-        chartType="Line"
-        data={[["Date", "Weight", "Temperature"], ...data]}
-        width="100%"
-        height="600px"
-        loading={loading}
-        loader={<CircularProgress />}
-        options={{
-          vAxis: {
-            minValue: 0,
-          },
-        }}
-        legendToggle
-      />
+      <DualAxes width="100%" loading={loading} {...config} />
     </Card>
   );
 }
