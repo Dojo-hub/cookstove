@@ -35,11 +35,12 @@ export default function Graph({ deviceID }) {
           deviceID,
           `?startDate=${dates[0]}&endDate=${dates[1]}`
         );
-        const rows = data.device.logs.map((e) => ({
+        let rows = data.device.logs.map((e) => ({
           day: e.timestamp,
           weight: Number(e.weight),
           temperature: Number(e.temperature),
         }));
+        rows = rows.sort((a, b) => new Date(b.day) - new Date(a.day))
         setData(rows);
         setLoading(false);
       } catch (error) {
@@ -65,6 +66,7 @@ export default function Graph({ deviceID }) {
       <Stack alignItems="end">
         <RangePicker
           defaultValue={[onemonthago, today]}
+          allowClear={false}
           value={[dayjs(dates[0]), dayjs(dates[1])]}
           onChange={(dates, dateStrings) => {
             if (dayjs(dateStrings[1]).diff(dateStrings[0], "day") > 30) {

@@ -28,7 +28,8 @@ export default function Login() {
         window.location.reload();
       } catch (error) {
         setLoading(false);
-        setError(error.response.data.message);
+        const { response } = error;
+        setError(response.data.message || response.statusText);
         console.log(error);
       }
     },
@@ -57,12 +58,10 @@ export default function Login() {
             onChange={formik.handleChange}
             value={formik.values.password}
           />
-          {error.length > 0 && <Typography style={{ color: "red" }}>{error}</Typography>}
-          <LoadingButton
-            loading={loading}
-            variant="contained"
-            type="submit"
-          >
+          {error.length > 0 && (
+            <Typography style={{ color: "red" }}>{error}</Typography>
+          )}
+          <LoadingButton loading={loading} variant="contained" type="submit">
             Login
           </LoadingButton>
         </Stack>
