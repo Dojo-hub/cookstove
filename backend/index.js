@@ -29,7 +29,6 @@ logger.token("date", () =>
 app.use(logger("common"));
 
 app.use(express.json());
-app.use(express.text());
 
 app.use("/", auth);
 app.use("/devices", validateUser, devices);

@@ -78,8 +78,7 @@ const addOne = async (req, res) => {
       throw new httpError("Missing required field!", 400);
     const deviceExists = await Device.findOne({ where: { serialNumber } });
     if (deviceExists) throw new httpError("Duplicate serial number", 409);
-    const payload = { ...req.body, userId: req.user.id };
-    const device = await Device.create(payload);
+    const device = await Device.create(req.body);
     res.send({ device });
   } catch (error) {
     if (error.name === "httpError")
@@ -111,7 +110,6 @@ const deleteOne = async (req, res) => {
 
 const saveLogFile = async (req, res) => {
   let file;
-  console.log(req.body)
   if (!req.files) return res.send({ msg: "No file." });
   file = req.files[0];
 
