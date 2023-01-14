@@ -13,10 +13,12 @@ const cors = require("cors")({
 const cron = require("node-cron");
 const { Device, log_files, sequelize } = require("./models/index");
 const csvtojson = require("./helpers/csvtojson");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 
 app.use(cors);
 
