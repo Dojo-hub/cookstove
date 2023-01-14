@@ -16,13 +16,18 @@ const csvtojson = require("./helpers/csvtojson");
 
 const app = express();
 
-const PORT = 3000;
+const PORT = 3001;
 
 app.use(cors);
 
-app.use(logger("dev"));
+logger.token("date", () =>
+  new Date().toLocaleString({ timeZone: "East Africa Time" })
+);
+
+app.use(logger("common"));
 
 app.use(express.json());
+app.use(express.text());
 
 app.use("/", auth);
 app.use("/devices", validateUser, devices);

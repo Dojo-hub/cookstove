@@ -110,7 +110,10 @@ const deleteOne = async (req, res) => {
 };
 
 const saveLogFile = async (req, res) => {
-  const file = req.files[0];
+  let file;
+  console.log(req.body)
+  if (!req.files) return res.send({ msg: "No file." });
+  file = req.files[0];
 
   try {
     if (!file) {
