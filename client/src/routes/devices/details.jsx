@@ -38,6 +38,17 @@ function TabPanel(props) {
   );
 }
 
+const Item = ({ label, value }) => (
+  <>
+    <Grid item xs={6}>
+      <Typography fontWeight={600}>{label}:</Typography>
+    </Grid>
+    <Grid item xs={6}>
+      <Typography>{value}</Typography>
+    </Grid>
+  </>
+);
+
 function a11yProps(index) {
   return {
     id: `device-tab-${index}`,
@@ -109,49 +120,53 @@ export default function details() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <Card sx={{ height: 200, maxWidth: 480, mt: 4 }}>
+        <Card sx={{ mt: 4 }}>
           {loading ? (
             <Loading />
           ) : (
             <Grid container p={4}>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>Name:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{device.name}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>IMEI:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{device.imei}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>Serial Number:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{device.serialNumber}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>Number:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{device.number}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>Sim ID:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>{device.simID}</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography fontWeight={600}>Created At:</Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography>
-                  {new Date(device.createdAt).toDateString()}
-                </Typography>
-              </Grid>
+              <Item label="Name" value={device.name} />
+              <Item label="IMEI" value={device.imei} />
+              <Item label="Serial Number" value={device.serialNumber} />
+              <Item label="Number" value={device.number} />
+              <Item label="Sim ID" value={device.simID} />
+              <Item label="Country" value={device.country} />
+              <Item label="Region" value={device.region} />
+              <Item
+                label="Stove efficiency (%)"
+                value={device.stoveEfficiency}
+              />
+              <Item
+                label="Maximum cooking load (kg)"
+                value={device.maximumCookingLoad}
+              />
+              <Item label="GPS Longitude" value={device.longitude} />
+              <Item label="GPS latitude" value={device.latitude} />
+              <Item label="Altitude (m)" value={device.altitude} />
+              <Item label="Site type" value={device.siteType} />
+              <Item
+                label="Stove/saucepan cooking capacity (L or kg)"
+                value={device.cookingCapacity}
+              />
+              <Item label="Build" value={device.build} />
+              <Item label="Saucepan type" value={device.saucepanType} />
+              <Item label="Fuel" value={device.fuel} />
+              <Item
+                label="Fuel moisture content (%)"
+                value={device.fuelMoistureContent}
+              />
+              <Item
+                label="Fuel caloric value"
+                value={device.fuelCaloricValue}
+              />
+              <Item
+                label="Baseline traditional stove efficiency (%)"
+                value={device.baselineEfficiency}
+              />
+              <Item
+                label="Created At"
+                value={new Date(device.createdAt).toDateString()}
+              />
             </Grid>
           )}
         </Card>

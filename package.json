@@ -1,4 +1,7 @@
 {
-    "private": true,
-    "workspaces": ["backend"]
+  "private": true,
+  "workspaces": [
+    "backend",
+    "client"
+  ]
 }

@@ -1,4 +1,9 @@
-const { Device, Device_logs, log_files } = require("../../models/index");
+const {
+  Device,
+  Device_logs,
+  log_files,
+  Cooking_Percentages,
+} = require("../../models/index");
 const httpError = require("../../helpers/httpError");
 const { Op } = require("sequelize");
 const isValidDate = require("../../helpers/checkdate");
@@ -79,11 +84,27 @@ const addOne = async (req, res) => {
     const deviceExists = await Device.findOne({ where: { serialNumber } });
     if (deviceExists) throw new httpError("Duplicate serial number", 409);
     const device = await Device.create(req.body);
+    // add first month cooking percentages
+    const date = new Date();
+    const startDate = date;
+    const endDate = new Date(date.setDate(date.getDate() + 30));
+    await Cooking_Percentages.create({
+      deviceId: device.id,
+      month: "Month 1",
+      startDate,
+      endDate,
+      fullLoad: 60,
+      twoThirdsLoad: 20,
+      halfLoad: 10,
+    });
     res.send({ device });
   } catch (error) {
     if (error.name === "httpError")
       res.status(error.code).send({ message: error.message });
-    else res.status(500).send();
+    else {
+      console.log(error);
+      res.status(500).send();
+    }
   }
 };
 
@@ -104,6 +125,7 @@ const deleteOne = async (req, res) => {
     const device = await Device.destroy({ where: { id } });
     res.send({ device });
   } catch (error) {
+    console.log(error);
     res.status(500).send();
   }
 };

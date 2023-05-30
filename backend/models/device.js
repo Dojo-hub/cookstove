@@ -17,6 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         onDelete: "CASCADE",
       });
+      Device.hasMany(models.Cooking_Percentages, {
+        foreignKey: "deviceId",
+        sourceKey: "id",
+        as: "monthlyCookingPercentages",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   Device.init(
@@ -26,6 +33,21 @@ module.exports = (sequelize, DataTypes) => {
       number: DataTypes.STRING,
       simID: DataTypes.STRING,
       imei: DataTypes.STRING,
+      country: DataTypes.STRING,
+      region: DataTypes.STRING,
+      stoveEfficiency: DataTypes.DECIMAL,
+      maximumCookingLoad: DataTypes.DECIMAL,
+      longitude: DataTypes.DECIMAL,
+      latitude: DataTypes.DECIMAL,
+      altitude: DataTypes.DECIMAL,
+      cookingCapacity: DataTypes.STRING,
+      baselineEfficiency: DataTypes.DECIMAL,
+      build: DataTypes.STRING,
+      saucepanType: DataTypes.STRING,
+      fuel: DataTypes.STRING,
+      siteType: DataTypes.STRING,
+      fuelMoistureContent: DataTypes.DECIMAL,
+      fuelCaloricValue: DataTypes.DECIMAL,
     },
     {
       sequelize,

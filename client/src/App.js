@@ -14,6 +14,7 @@ export default function App() {
       localStorage.removeItem("user");
       window.location.reload;
     }
+    console.log(process.env.NODE_ENV);
   }, [user]);
 
   return (

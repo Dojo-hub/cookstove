@@ -15,6 +15,7 @@ const device = {
   serialNumber: "1234567a",
   number: "1234567",
   simID: "12",
+  imei: "123456789012345",
 };
 
 let token;

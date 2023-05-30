@@ -1,7 +1,6 @@
 import { ErrorMessage, useFormik } from "formik";
 import { Container, Stack, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
-import { useNavigate } from "react-router-dom";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useState } from "react";
 import { login } from "../api/user";
@@ -9,7 +8,6 @@ import { login } from "../api/user";
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
 
 export default function Login() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 

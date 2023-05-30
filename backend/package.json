@@ -9,10 +9,12 @@
   "scripts": {
     "start": "nodemon",
     "test": "NODE_ENV=test jest --coverage",
-    "pretest": "yarn db:drop && yarn db:create && yarn db:migrate",
-    "db:drop": "NODE_ENV=test sequelize-cli db:drop",
-    "db:create": "NODE_ENV=test sequelize-cli db:create",
-    "db:migrate": "NODE_ENV=test sequelize-cli db:migrate"
+    "test:win": "set NODE_ENV=test&& yarn pretest:win && jest --coverage",
+    "pretest": "NODE_ENV=test yarn db:drop && yarn db:create && yarn db:migrate",
+    "pretest:win": "set NODE_ENV=test&& yarn db:drop && yarn db:create && yarn db:migrate",
+    "db:drop": "sequelize-cli db:drop",
+    "db:create": "sequelize-cli db:create",
+    "db:migrate": "sequelize-cli db:migrate"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

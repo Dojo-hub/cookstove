@@ -1,9 +1,100 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useFormik } from "formik";
 import { updateDevice } from "../../api/devices";
-import { Card, Grid, Stack, TextField, Typography } from "@mui/material";
+import {
+  Card,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import MuiTextField from "@mui/material/TextField";
 import { useEffect } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
+
+const fields = [
+  { label: "Name", name: "name" },
+  { label: "Serial Number", name: "serialNumber" },
+  { label: "Number", name: "number" },
+  { label: "SIM ID", name: "simID" },
+  { label: "IMEI", name: "imei" },
+  { label: "Country", name: "country" },
+  { label: "Region", name: "region" },
+  { label: "Stove Efficiency (%)", name: "stoveEfficiency", type: "number" },
+  {
+    label: "Maximum Cooking Load (kg)",
+    name: "maximumCookingLoad",
+    type: "number",
+  },
+  { label: "GPS Longitude", name: "longitude", type: "number" },
+  { label: "GPS Latitude", name: "latitude", type: "number" },
+  { label: "Altitude (m)", name: "altitude", type: "number" },
+  {
+    label: "Site Type",
+    name: "siteType",
+    type: "select",
+    options: [
+      "School",
+      "Prison",
+      "Health center",
+      "Residential",
+      "Restaurant",
+      "Hotel",
+      "Business",
+      "Others",
+    ],
+  },
+  {
+    label: "Stove/Saucepan Cooking Capacity (L or kg)",
+    name: "cookingCapacity",
+  },
+  {
+    label: "Build",
+    name: "build",
+    type: "select",
+    options: ["Mobile", "Fixed"],
+  },
+  {
+    label: "Saucepan Type",
+    name: "saucepanType",
+    type: "select",
+    options: ["Aluminium", "Stainless Steel"],
+  },
+  {
+    label: "Fuel",
+    name: "fuel",
+    type: "select",
+    options: [
+      "Firewood",
+      "Charcoal",
+      "LPG",
+      "Natural gas",
+      "Biogas",
+      "Electric",
+      "Others",
+    ],
+  },
+  {
+    label: "Fuel Moisture Content (%)",
+    name: "fuelMoistureContent",
+    type: "number",
+  },
+  { label: "Fuel Caloric Value", name: "fuelCaloricValue", type: "number" },
+  {
+    label: "Baseline Traditional Stove Efficiency (%)",
+    name: "baselineEfficiency",
+    type: "number",
+  },
+];
+
+const TextField = (props) => (
+  <Grid item xs={6}>
+    <MuiTextField fullWidth {...props} />
+  </Grid>
+);
 
 export default function UpdateDevice({ device }) {
   const [change, setChange] = useState(false);
@@ -31,63 +122,62 @@ export default function UpdateDevice({ device }) {
     else setChange(true);
   }, [formik.values]);
 
+  const View = useMemo(() => {
+    const renderField = (field) => {
+      if (field.type === "select") {
+        return (
+          <Grid item xs={6}>
+            <FormControl fullWidth>
+              <InputLabel id={field.name}>{field.label}</InputLabel>
+              <Select
+                labelId={field.name}
+                id={field.name}
+                name={field.name}
+                label={field.label}
+                required
+                onChange={formik.handleChange}
+                value={formik.values[field.name]}
+              >
+                {field.options.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        );
+      }
+      return (
+        <TextField
+          type={field.type === "number" ? "number" : "text"}
+          key={field.name}
+          id={field.name}
+          name={field.name}
+          label={field.label}
+          required
+          onChange={formik.handleChange}
+          value={formik.values[field.name]}
+        />
+      );
+    };
+    return () => (
+      <Grid container my={1} spacing={4}>
+        {fields.map((field) => {
+          return renderField(field);
+        })}
+      </Grid>
+    );
+  }, [formik]);
+
   return (
     <Card sx={{ p: 2, mt: 4, width: "100%" }}>
       <form onSubmit={formik.handleSubmit}>
+        <Typography textAlign="center" variant="h5">
+          Update Device
+        </Typography>
+        {View()}
         <Stack spacing={2} alignItems="center">
-          <Typography variant="h5">Update Device</Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="imei"
-                name="imei"
-                label="IMEI"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.imei}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="name"
-                name="name"
-                label="Device Name"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.name}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="serialnumber"
-                name="serialNumber"
-                label="Serial Number"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.serialNumber}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="number"
-                name="number"
-                label="Number"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.number}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                id="simID"
-                name="simID"
-                label="Sim ID"
-                required
-                onChange={formik.handleChange}
-                value={formik.values.simID}
-              />
-            </Grid>
-          </Grid>
           {error.length > 0 && (
             <Typography style={{ color: "red" }}>{error}</Typography>
           )}
