@@ -21,6 +21,14 @@ export function getOne(id) {
   return axiosInstance.get(`/${id}`);
 }
 
+export function getMonthlyCookingPercentages(id) {
+  return axiosInstance.get(`/${id}/monthly-cooking-percentages`);
+}
+
+export function updateMonthlyCookingPercentages(id, data) {
+  return axiosInstance.put(`/${id}/monthly-cooking-percentages`, data);
+}
+
 export function updateDevice({ id, ...rest }) {
   delete rest.userID;
   return axiosInstance.put(`/${id}`, { ...rest });

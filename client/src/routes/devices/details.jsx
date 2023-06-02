@@ -10,6 +10,7 @@ import Loading from "../../components/Loading";
 import Graph from "./graph";
 import Logs from "./logs";
 import UpdateDevice from "./update";
+import CookingPercentages from "../../components/CookingPercentages";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
 
@@ -170,6 +171,7 @@ export default function details() {
             </Grid>
           )}
         </Card>
+        <CookingPercentages deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Logs deviceID={id} />

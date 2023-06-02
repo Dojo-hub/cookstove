@@ -76,6 +76,53 @@ const getOne = async (req, res) => {
   }
 };
 
+const getMonthlyCookingPercentages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { page = 0 } = req.query;
+    const limit = 50;
+    const include = {
+      model: Cooking_Percentages,
+      as: "monthlyCookingPercentages",
+      limit,
+      offset: page * limit,
+      order: [["createdAt", "DESC"]],
+    };
+    const device = await Device.findOne({
+      where: { id },
+      include,
+    });
+    if (device) {
+      const count = await device.countMonthlyCookingPercentages();
+      res.send({ device, count });
+    } else res.send({ device: { monthlyCookingPercentages: [] }, count: 0 });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+};
+
+const updateMonthlyCookingPercentages = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { fullLoad, twoThirdsLoad, halfLoad } = req.body;
+    if (!(fullLoad && twoThirdsLoad && halfLoad))
+      throw new httpError("Missing required field!", 400);
+    await Cooking_Percentages.update(
+      {
+        fullLoad,
+        twoThirdsLoad,
+        halfLoad,
+      },
+      { where: { id } }
+    );
+    res.status(201).send();
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+};
+
 const addOne = async (req, res) => {
   try {
     const { name, serialNumber, number, simID, imei } = req.body;
@@ -173,11 +220,13 @@ const saveJsonLog = async (req, res) => {
 
 module.exports = {
   getAll,
+  getMonthlyCookingPercentages,
   getOne,
   getLogs,
   addOne,
   deleteOne,
   updateOne,
+  updateMonthlyCookingPercentages,
   saveJsonLog,
   saveLogFile,
 };
