@@ -24,6 +24,13 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       });
+      Device.hasMany(models.Cooking_Events, {
+        foreignKey: "deviceId",
+        sourceKey: "id",
+        as: "cookingEvents",
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      });
     }
   }
   Device.init(
