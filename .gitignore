@@ -9,6 +9,9 @@ coverage
 dist
 
 uploads
+scripts
+
+.vscode
 
 .parcel-cache
 yarn-error.log

@@ -18,6 +18,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import DevicesIcon from "@mui/icons-material/Devices";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { Menu, MenuItem } from "@mui/material";
 
@@ -66,7 +67,12 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-const icons = [<DashboardIcon />, <DevicesIcon />, <PersonIcon />];
+const icons = [
+  <DashboardIcon />,
+  <DevicesIcon />,
+  <PersonIcon />,
+  <BarChartIcon />,
+];
 
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
@@ -166,7 +172,7 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Devices", "Users"].map((text, index) => (
+          {["Dashboard", "Devices", "Users", "Analytics"].map((text, index) => (
             <ListItem
               key={text}
               onClick={() => navigate(`/${text.toLowerCase()}`)}

@@ -5,6 +5,7 @@ import { Devices, Details } from "./devices";
 import { UserDetails, Users } from "./users";
 import Dashboard from "./dashboard/Dashboard";
 import Profile from "./profile";
+import Analytics from "./analytics/Analytics";
 
 export default function Routes() {
   const user = !!localStorage.getItem("user");
@@ -53,6 +54,10 @@ export default function Routes() {
               element: <UserDetails />,
             },
           ],
+        },
+        {
+          path: "analytics",
+          element: <Analytics />,
         },
       ],
     },
