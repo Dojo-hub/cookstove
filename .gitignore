@@ -9,7 +9,8 @@ coverage
 dist
 
 uploads
-scripts
+
+__pycache__
 
 .vscode
 

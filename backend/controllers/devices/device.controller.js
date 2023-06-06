@@ -44,6 +44,9 @@ const getLogs = async (req, res) => {
           [Op.gte]: new Date(startDate),
           [Op.lte]: new Date(endDate),
         },
+        temperature: {
+          [Op.not]: null,
+        },
       };
       delete include.limit;
     }
