@@ -1,9 +1,10 @@
 import * as React from "react";
 import { Box, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Card, Modal, Typography } from "@mui/material";
-import { useState, useEffect } from "react";
+import { Typography } from "@mui/material";
+import { useContext, useState, useEffect } from "react";
 import { getDeviceEvents } from "../api/cookstove_data";
+import { DeviceEventsContext } from "../routes/devices/details";
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -15,6 +16,8 @@ const formatDate = (dateString) => {
 };
 
 export default function DeviceEventsTable({ deviceId }) {
+  const { setEvent } = useContext(DeviceEventsContext);
+
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [reload, setReload] = useState(0);
@@ -91,6 +94,7 @@ export default function DeviceEventsTable({ deviceId }) {
         setLoading(true);
         const { data } = await getDeviceEvents(deviceId);
         setRows(data.rows);
+        setEvent(data.rows[0]);
         setCount(data.count);
         setLoading(false);
       } catch (error) {
@@ -118,6 +122,7 @@ export default function DeviceEventsTable({ deviceId }) {
           disableSelectionOnClick
           onPageChange={(page, details) => setPage(page)}
           experimentalFeatures={{ newEditingApi: true }}
+          onRowClick={(params) => setEvent(params.row)}
         />
       </Box>
     </Box>

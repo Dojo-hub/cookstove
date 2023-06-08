@@ -1,7 +1,7 @@
 import LoadingButton from "@mui/lab/LoadingButton";
 import { Box, Card, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
-import { Fragment, useEffect, useState } from "react";
+import { createContext, Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { notification } from "antd";
 import { deleteDevice, getOne } from "../../api/devices";
@@ -13,8 +13,11 @@ import UpdateDevice from "./update";
 import CookingPercentages from "../../components/CookingPercentages";
 import DeviceEventsChart from "../../components/DeviceEventsCharts";
 import DeviceEventsTable from "../../components/DeviceEventsTable";
+import EventDetails from "../../components/EventDetails";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
+
+export const DeviceEventsContext = createContext();
 
 const openNotification = ({ message, description = "", type }) => {
   notification.open({
@@ -69,6 +72,7 @@ export default function details() {
   const [deviceName, setDeviceName] = useState("");
   const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
+  const [event, setEvent] = useState(null);
 
   useEffect(() => {
     const fetchDevice = async () => {
@@ -124,8 +128,11 @@ export default function details() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <DeviceEventsChart id={id} />
-        <DeviceEventsTable deviceId={id} />
+        <DeviceEventsContext.Provider value={{ event, setEvent }}>
+          <DeviceEventsChart id={id} />
+          <DeviceEventsTable deviceId={id} />
+          <EventDetails />
+        </DeviceEventsContext.Provider>
       </TabPanel>
       <TabPanel value={value} index={1}>
         <Card sx={{ mt: 4 }}>

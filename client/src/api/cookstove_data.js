@@ -24,3 +24,7 @@ export function getCookstoveData(query) {
 export function getAllEventsData(query) {
   return axiosInstance.get("/events" + query);
 }
+
+export function getEventLogs(eventId) {
+  return axiosInstance.get(`/logs/${eventId}`);
+}

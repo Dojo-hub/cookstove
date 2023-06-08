@@ -7,9 +7,31 @@ const deviceEvents = async (req, res) => {
   try {
     const { deviceId } = req.params;
     const events = await db.Cooking_Events.findAndCountAll({
-      where: { deviceId },
+      where: {
+        deviceId,
+      },
     });
     res.status(200).send(events);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send();
+  }
+};
+
+const eventLogs = async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const logs = await db.Device_logs.findAll({
+      where: {
+        event: eventId,
+        // temperature and weight are not null
+        [sequelize.Op.and]: [
+          { temperature: { [sequelize.Op.ne]: null } },
+          { weight: { [sequelize.Op.ne]: null } },
+        ],
+      },
+    });
+    res.status(200).send(logs);
   } catch (error) {
     console.log(error);
     res.status(500).send();
@@ -97,5 +119,6 @@ const graphData = async (req, res) => {
 module.exports = {
   deviceEvents,
   eventsData,
+  eventLogs,
   graphData,
 };
