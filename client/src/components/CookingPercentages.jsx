@@ -31,7 +31,6 @@ export default function CookingPercentages({ deviceID }) {
   const [maxLoad, setMaxLoad] = useState(0);
 
   const columns = [
-    { field: "id", headerName: "ID", width: 60 },
     {
       field: "month",
       headerName: "Name",

@@ -1,28 +1,28 @@
 import { useEffect, useState } from "react";
-import { DatePicker, notification } from "antd";
+import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import {
-  Card,
-  FormGroup,
   FormControlLabel,
+  FormGroup,
   Stack,
   Switch,
   Typography,
 } from "@mui/material";
-import { getAllEventsData } from "../../api/cookstove_data";
-import Charts from "../../components/Charts";
+import Charts from "./Charts";
+import { getAllEventsData } from "../api/cookstove_data";
+
 const { RangePicker } = DatePicker;
 
 const today = dayjs();
 const threemonthsago = dayjs().subtract(3, "month");
 
-export default function Analytics() {
+export default function DeviceEventsChart({ id }) {
   const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
   const [dates, setDates] = useState([
     dayjs(threemonthsago).format("YYYY-MM-DD"),
     dayjs(today).format("YYYY-MM-DD"),
   ]);
-  const [data, setData] = useState([]);
   const [groupBy, setGroupBy] = useState("month");
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function Analytics() {
       try {
         setLoading(true);
         const { data } = await getAllEventsData(
-          `?startDate=${dates[0]}&endDate=${dates[1]}&groupBy=${groupBy}`
+          `?startDate=${dates[0]}&endDate=${dates[1]}&groupBy=${groupBy}&deviceId=${id}`
         );
         setData(data);
         setLoading(false);
@@ -40,7 +40,7 @@ export default function Analytics() {
       }
     };
     fetchCookstoveData();
-  }, [dates, groupBy]);
+  }, [dates, groupBy, id]);
 
   const handleClick = (e) => {
     setGroupBy(e.target.checked ? "month" : "day");
@@ -49,7 +49,7 @@ export default function Analytics() {
   return (
     <>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h4">Analytics</Typography>
+        <Typography variant="h5">Cookstove Data</Typography>
         <RangePicker
           defaultValue={[threemonthsago, today]}
           allowClear={false}

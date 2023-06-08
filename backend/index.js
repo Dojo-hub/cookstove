@@ -35,6 +35,7 @@ app.use("/devices", validateUser, devices);
 app.use("/logs", logs);
 app.use("/admin/users", validateUser, users);
 app.use("/stats", validateUser, stats);
+app.use("/events", validateUser, require("./routes/events"));
 
 if (process.env.NODE_ENV !== "test")
   app.listen(PORT, () => {

@@ -5,6 +5,7 @@ import PeopleIcon from "@mui/icons-material/People";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
 import { useEffect, useState } from "react";
 import { getPlatformStats } from "../../api/stats";
+import CookstoveData from "../../components/CookstoveData";
 
 const Card = (props) => <MuiCard sx={{ p: 4 }} {...props} />;
 const Skeleton = () => <MuiSkeleton height={56} width={240} />;
@@ -65,6 +66,7 @@ export default function Dashboard() {
           </Card>
         </Grid>
       </Grid>
+      <CookstoveData />
     </>
   );
 }

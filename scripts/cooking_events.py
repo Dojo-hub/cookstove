@@ -39,7 +39,7 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
                     
         if first_below_80 - first_above_80 > 10:
             date = datetime.datetime.now()
-            query = "INSERT INTO cooking_events (deviceId, startDate, endDate, created_at, updated_at) VALUES (%s, %s, %s, %s, %s)"
+            query = "INSERT INTO cooking_events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(query, (device_id, date, date, date, date))
             cnx.commit()
             lastrowid = cursor.lastrowid

@@ -11,6 +11,8 @@ import Graph from "./graph";
 import Logs from "./logs";
 import UpdateDevice from "./update";
 import CookingPercentages from "../../components/CookingPercentages";
+import DeviceEventsChart from "../../components/DeviceEventsCharts";
+import DeviceEventsTable from "../../components/DeviceEventsTable";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
 
@@ -114,13 +116,18 @@ export default function details() {
       <br />
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange} aria-label="device tabs">
-          <Tab label="Details" {...a11yProps(0)} />
-          <Tab label="Logs" {...a11yProps(1)} />
-          <Tab label="Graphs" {...a11yProps(2)} />
-          <Tab label="Settings" {...a11yProps(3)} />
+          <Tab label="Dashboard" {...a11yProps(0)} />
+          <Tab label="Details" {...a11yProps(1)} />
+          <Tab label="Logs" {...a11yProps(2)} />
+          <Tab label="Graphs" {...a11yProps(3)} />
+          <Tab label="Settings" {...a11yProps(4)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
+        <DeviceEventsChart id={id} />
+        <DeviceEventsTable deviceId={id} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
         <Card sx={{ mt: 4 }}>
           {loading ? (
             <Loading />
@@ -173,13 +180,13 @@ export default function details() {
         </Card>
         <CookingPercentages deviceID={id} />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={2}>
         <Logs deviceID={id} />
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={3}>
         <Graph deviceID={id} />
       </TabPanel>
-      <TabPanel value={value} index={3}>
+      <TabPanel value={value} index={4}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
             <UpdateDevice device={device} />

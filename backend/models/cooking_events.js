@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       energyConsumption: DataTypes.DECIMAL,
       power: DataTypes.DECIMAL,
       usefulEnergy: DataTypes.DECIMAL,
-      usefulThermalEnergy: DataTypes.DECIMAL,
+      usefulThermalPower: DataTypes.DECIMAL,
       energySavings: DataTypes.DECIMAL,
     },
     {
