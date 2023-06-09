@@ -213,7 +213,7 @@ const saveJsonLog = async (req, res) => {
     if (!device) throw new httpError(`No device exists with imei ${imei}`, 409);
     req.body.timestamp = new Date(timestamp * 1000);
     await device.createLog(req.body);
-    res.send({ msg: "File uploaded successfully" });
+    res.send({ msg: "Logs added successfully" });
   } catch (error) {
     console.log(error);
     if (error.name === "httpError") res.status(error.code).send(error.message);

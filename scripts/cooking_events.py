@@ -3,13 +3,22 @@ import mysql.connector
 import os
 from dotenv import load_dotenv
 from process_event import event_calculations
+import sys
+
+args = sys.argv
 
 load_dotenv()
 
 db_host = os.getenv('DB_HOST')
 db_user = os.getenv('DB_USER')
 db_password = os.getenv('DB_PASSWORD')
-db_name = os.getenv('DB_NAME')
+try:
+    if args[1] == 'test':
+        db_name = os.getenv('DB_NAME_TEST')
+    else:
+        db_name = os.getenv('DB_NAME')
+except IndexError:
+    db_name = os.getenv('DB_NAME')
 
 # Establish the database connection
 cnx = mysql.connector.connect(user=db_user, password=db_password, host=db_host, database=db_name)

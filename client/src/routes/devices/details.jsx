@@ -72,7 +72,7 @@ export default function details() {
   const [deviceName, setDeviceName] = useState("");
   const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
-  const [event, setEvent] = useState(null);
+  const [event, setEvent] = useState({});
 
   useEffect(() => {
     const fetchDevice = async () => {

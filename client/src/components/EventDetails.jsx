@@ -27,8 +27,8 @@ export default function EventDetails() {
         console.log(error);
       }
     };
-    fetchEventLogs();
-  }, [event.id]);
+    if (event) fetchEventLogs();
+  }, [event]);
 
   const config = {
     data: [data, data],
