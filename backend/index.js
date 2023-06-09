@@ -26,7 +26,7 @@ logger.token("date", () =>
   new Date().toLocaleString({ timeZone: "East Africa Time" })
 );
 
-app.use(logger("common"));
+if (process.env.NODE_ENV !== "test") app.use(logger("common"));
 
 app.use(express.json());
 

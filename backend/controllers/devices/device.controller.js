@@ -135,8 +135,8 @@ const addOne = async (req, res) => {
     if (deviceExists) throw new httpError("Duplicate serial number", 409);
     const device = await Device.create(req.body);
     // add first month cooking percentages
+    const startDate = new Date();
     const date = new Date();
-    const startDate = date;
     const endDate = new Date(date.setDate(date.getDate() + 30));
     await Cooking_Percentages.create({
       deviceId: device.id,
@@ -213,9 +213,8 @@ const saveJsonLog = async (req, res) => {
     if (!device) throw new httpError(`No device exists with imei ${imei}`, 409);
     req.body.timestamp = new Date(timestamp * 1000);
     await device.createLog(req.body);
-    res.send({ msg: "Logs added successfully" });
+    res.send({ msg: "Log added successfully" });
   } catch (error) {
-    console.log(error);
     if (error.name === "httpError") res.status(error.code).send(error.message);
     else res.sendStatus(500);
   }

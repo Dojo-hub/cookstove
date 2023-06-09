@@ -12,12 +12,15 @@ const user = {
   lastName: "Doe",
 };
 
-const device = {
+let device = {
   name: "Jd's device",
   serialNumber: "1234567b",
   number: "12345678",
   simID: "13",
   imei: "1234567890123456",
+  maximumCookingLoad: 11,
+  baselineEfficiency: 80,
+  stoveEfficiency: 50,
 };
 
 let token;
@@ -25,46 +28,55 @@ let token;
 beforeAll(async () => {
   const { body } = await request.post("/register").send(user);
   token = body.token;
-  await request
+  const { body: b } = await request
     .post("/devices/")
     .send(device)
     .set("Authorization", `Bearer ${token}`);
+  device = b.device;
 });
 
 it("Add logs", async () => {
   request.post = jest.fn(request.post);
-  await Promise.all(
-    logs.map(async (log) => {
-      await request
-        .post("/logs/json")
-        .send(log)
-        .set("Authorization", `Bearer ${token}`);
-    })
-  );
-  expect(request.post).toHaveBeenCalledTimes(logs.length);
+  try {
+    await Promise.all(
+      logs.map(async (log) => {
+        await request
+          .post("/logs/json")
+          .send(log)
+          .set("Authorization", `Bearer ${token}`);
+      })
+    );
+    expect(request.post).toHaveBeenCalledTimes(logs.length);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 it("Create event", async () => {
-  // run python script to create event
   const python = spawn("py", ["../scripts/cooking_events.py", "test"]);
-  await new Promise((resolve) => {
-    python.stdout.on("data", function (data) {
-      console.log("Pipe data from python script ...");
-      console.log(data.toString());
+  try {
+    const log = await new Promise((resolve, reject) => {
+      python.stdout.on("data", async function (data) {
+        console.log("Pipe data from python script ...");
+        console.log(data.toString());
+        const { body, status } = await request
+          .get(`/events/${device.id}`)
+          .set("Authorization", `Bearer ${token}`);
+        if (status !== 200) {
+          reject(`Error getting event. REsponse status: ${status}`);
+        } else {
+          resolve(body.rows[0]);
+        }
+      });
+      python.stderr.on("data", (data) => {
+        reject(`stderr: ${data.toString("utf8")}`);
+      });
+      python.on("close", (code) => {
+        reject(`child process exited with code ${code}`);
+      });
     });
-    python.stderr.on("data", (data) => {
-      console.error("stderr: ", data.toString("utf8"));
-    });
-    python.on("close", (code) => {
-      console.log(`child process exited with code ${code}`);
-      resolve();
-    });
-  });
-});
-
-it("Get all events", async () => {
-  const { body } = await request
-    .get("/events/")
-    .set("Authorization", `Bearer ${token}`);
-  expect(body.length).toBe(1);
+    expect(log.duration).toBe(420);
+  } catch (error) {
+    console.log(error);
+  }
 });

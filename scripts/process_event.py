@@ -1,22 +1,9 @@
-import datetime
-import mysql.connector
-import os
-from dotenv import load_dotenv
 from decimal import Decimal, getcontext
-
-load_dotenv()
-
-db_host = os.getenv('DB_HOST')
-db_user = os.getenv('DB_USER')
-db_password = os.getenv('DB_PASSWORD')
-db_name = os.getenv('DB_NAME')
 
 getcontext().prec = 10
 getcontext().rounding = 'ROUND_HALF_UP'
 
-def event_calculations(device_id, event, event_id):
-    # Establish the database connection
-    cnx = mysql.connector.connect(user=db_user, password=db_password, host=db_host, database=db_name)
+def event_calculations(device_id, event, event_id, cursor, cnx):
     cursor = cnx.cursor()
 
     start_date = event[0][1]
@@ -30,11 +17,11 @@ def event_calculations(device_id, event, event_id):
 
     if len(rows) > 0:
         device = rows[0]
+        if device[12] is None or device[11] is None or device[17] is None or device[27] is None or device[28] is None or device[29] is None:
+            return
         max_load = float(device[12])
         efficiency = device[11] / 100
         baseline_efficiency = device[17] / 100
-        if max_load is None:
-            return
         food_mass = float(device[27]) * max_load + float(device[28]) * max_load * 0.667 + float(device[29]) * max_load * 0.5
         # time difference between start_date and end_date
         duration = end_date - start_date
@@ -68,9 +55,6 @@ def event_calculations(device_id, event, event_id):
         query = "UPDATE cooking_events SET startDate = %s, endDate = %s, duration = %s, averageTemperature = %s, maximumTemperature = %s, totalFuelMass = %s, foodMass = %s, energyConsumption = %s, power = %s, usefulEnergy = %s, usefulThermalPower = %s, energySavings = %s WHERE id = %s"
         cursor.execute(query, (start_date, end_date, duration * 3600, average_temp, max_temp, total_fuel_mass, food_mass, energy_consumption, power, useful_energy, useful_thermal_power, energy_savings, event_id))
         cnx.commit()
-
-    cursor.close()
-    cnx.close()
 
         
 

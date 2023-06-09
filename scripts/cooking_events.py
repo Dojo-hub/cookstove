@@ -25,7 +25,7 @@ cnx = mysql.connector.connect(user=db_user, password=db_password, host=db_host, 
 cursor = cnx.cursor()
 
 def find_event(cursor, device_id, start_id, sn, limit=1000):
-    query = "SELECT * FROM device_logs WHERE id > %s AND temperature IS NOT NULL AND weight IS NOT NULL AND deviceSerialNumber = %s LIMIT %s"
+    query = "SELECT * FROM device_logs WHERE id > %s AND temperature IS NOT NULL AND weight IS NOT NULL AND deviceSerialNumber = %s ORDER BY timestamp ASC LIMIT %s;"
     cursor.execute(query, (start_id, sn, limit))
 
     rows = cursor.fetchall()
@@ -42,11 +42,16 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
 
     event = []
     if first_above_80 is not None and first_below_80 is not None:
+        above_80 = False
         for row in rows:
-            if row[0] >= first_above_80 and row[0] < first_below_80:
+            if row[0] == first_above_80:
+                above_80 = True
+            if above_80:
                 event.append(row)
+            if row[0] == first_below_80:
+                break
                     
-        if first_below_80 - first_above_80 > 10:
+        if len(event) > 10:
             date = datetime.datetime.now()
             query = "INSERT INTO cooking_events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(query, (device_id, date, date, date, date))
@@ -55,10 +60,9 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
             query = "UPDATE device_logs SET event = %s WHERE id >= %s AND id < %s"
             cursor.execute(query, (lastrowid, first_above_80, first_below_80))
             cnx.commit()
-            event_calculations(device_id, event, lastrowid)
+            event_calculations(device_id, event, lastrowid, cursor, cnx)
         else:
-            # range too small
-            pass
+            print("Range too small")
 
     return first_below_80, len(rows) < limit, event
 
