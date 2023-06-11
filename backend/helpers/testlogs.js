@@ -23,8 +23,6 @@ module.exports = [
     temperature: "72.62",
     longitude: "32.527561",
     latitude: "0.373462",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -33,8 +31,6 @@ module.exports = [
     temperature: "81.37",
     longitude: "32.527561",
     latitude: "0.373462",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -43,8 +39,6 @@ module.exports = [
     temperature: "95.50",
     longitude: "32.527553",
     latitude: "0.373462",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -53,8 +47,6 @@ module.exports = [
     temperature: "110.75",
     longitude: "32.527553",
     latitude: "0.373463",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -63,8 +55,6 @@ module.exports = [
     temperature: "128.63",
     longitude: "32.527549",
     latitude: "0.373467",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -73,8 +63,6 @@ module.exports = [
     temperature: "154.88",
     longitude: "32.527549",
     latitude: "0.373468",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -83,8 +71,6 @@ module.exports = [
     temperature: "168.63",
     longitude: "32.527553",
     latitude: "0.373468",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -93,8 +79,6 @@ module.exports = [
     temperature: "167.13",
     longitude: "32.527553",
     latitude: "0.373467",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -103,8 +87,6 @@ module.exports = [
     temperature: "167.63",
     longitude: "32.527553",
     latitude: "0.373473",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -113,8 +95,6 @@ module.exports = [
     temperature: "161.88",
     longitude: "32.527553",
     latitude: "0.373480",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -123,8 +103,6 @@ module.exports = [
     temperature: "156.63",
     longitude: "32.527553",
     latitude: "0.373473",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -133,8 +111,6 @@ module.exports = [
     temperature: "152.00",
     longitude: "32.527534",
     latitude: "0.373473",
-    createdAt: "2023-05-09T09:46:01.000Z",
-    updatedAt: "2023-05-09T09:46:01.000Z",
     imei: "1234567890123456",
   },
   {
@@ -143,8 +119,6 @@ module.exports = [
     temperature: "147.63",
     longitude: "32.527530",
     latitude: "0.373468",
-    createdAt: "2023-05-09T09:46:00.000Z",
-    updatedAt: "2023-05-09T09:46:00.000Z",
     imei: "1234567890123456",
   },
   {
@@ -153,8 +127,6 @@ module.exports = [
     temperature: "141.63",
     longitude: "32.527526",
     latitude: "0.373463",
-    createdAt: "2023-05-09T09:46:00.000Z",
-    updatedAt: "2023-05-09T09:46:00.000Z",
     imei: "1234567890123456",
   },
   {
@@ -163,8 +135,6 @@ module.exports = [
     temperature: "124.25",
     longitude: "0.000000",
     latitude: "0.000000",
-    createdAt: "2023-05-09T09:46:00.000Z",
-    updatedAt: "2023-05-09T09:46:00.000Z",
     imei: "1234567890123456",
   },
   {
@@ -173,8 +143,6 @@ module.exports = [
     temperature: "70.37",
     longitude: "32.527599",
     latitude: "0.373458",
-    createdAt: "2023-05-01T22:00:04.000Z",
-    updatedAt: "2023-05-01T22:00:04.000Z",
     imei: "1234567890123456",
   },
   {
@@ -183,8 +151,6 @@ module.exports = [
     temperature: "71.00",
     longitude: "32.527595",
     latitude: "0.373457",
-    createdAt: "2023-05-01T22:00:04.000Z",
-    updatedAt: "2023-05-01T22:00:04.000Z",
     imei: "1234567890123456",
   },
 ];

@@ -25,7 +25,7 @@ module.exports = {
         "Devices",
         "stoveEfficiency",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.INTEGER,
         },
         { transaction }
       );
@@ -33,7 +33,7 @@ module.exports = {
         "Devices",
         "maximumCookingLoad",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.DECIMAL(10, 2),
         },
         { transaction }
       );
@@ -41,7 +41,7 @@ module.exports = {
         "Devices",
         "longitude",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.STRING,
         },
         { transaction }
       );
@@ -49,7 +49,7 @@ module.exports = {
         "Devices",
         "latitude",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.STRING,
         },
         { transaction }
       );
@@ -57,7 +57,7 @@ module.exports = {
         "Devices",
         "altitude",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.DECIMAL(10, 2),
         },
         { transaction }
       );
@@ -73,7 +73,7 @@ module.exports = {
         "Devices",
         "baselineEfficiency",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.INTEGER,
         },
         { transaction }
       );
@@ -113,7 +113,7 @@ module.exports = {
         "Devices",
         "fuelMoistureContent",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.DECIMAL(10, 2),
         },
         { transaction }
       );
@@ -121,7 +121,7 @@ module.exports = {
         "Devices",
         "fuelCaloricValue",
         {
-          type: Sequelize.DECIMAL,
+          type: Sequelize.DECIMAL(10, 2),
         },
         { transaction }
       );

@@ -32,6 +32,14 @@ export default function DeviceEventsChart({ id }) {
         const { data } = await getAllEventsData(
           `?startDate=${dates[0]}&endDate=${dates[1]}&groupBy=${groupBy}&deviceId=${id}`
         );
+        // change all the fields that can be numbers into numbers
+        data.forEach((item) => {
+          for (const key in item) {
+            if (key !== "day" && key !== "month") item[key] = Number(item[key]);
+            if (key === "avgDuration")
+              item[key] = Math.round((item[key] / 3600) * 100) / 100;
+          }
+        });
         setData(data);
         setLoading(false);
       } catch (error) {

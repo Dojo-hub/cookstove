@@ -51,7 +51,7 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
             if row[0] == first_below_80:
                 break
                     
-        if len(event) > 10:
+        if len(event) > 5:
             date = datetime.datetime.now()
             query = "INSERT INTO cooking_events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(query, (device_id, date, date, date, date))
@@ -99,7 +99,7 @@ def find_all_events(device):
     print("Total events found: " + str(events_count))
 
 
-query = "SELECT * FROM devices WHERE serialNumber IN (SELECT DISTINCT deviceSerialNumber FROM device_logs);"
+query = "SELECT * FROM devices WHERE serialNumber IN (SELECT DISTINCT deviceSerialNumber FROM device_logs) AND maximumCookingLoad IS NOT NULL;"
 cursor.execute(query)
 
 rows = cursor.fetchall()

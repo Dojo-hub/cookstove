@@ -36,47 +36,48 @@ beforeAll(async () => {
 });
 
 it("Add logs", async () => {
-  request.post = jest.fn(request.post);
-  try {
-    await Promise.all(
-      logs.map(async (log) => {
-        await request
-          .post("/logs/json")
-          .send(log)
-          .set("Authorization", `Bearer ${token}`);
-      })
-    );
-    expect(request.post).toHaveBeenCalledTimes(logs.length);
-  } catch (error) {
-    console.log(error);
-  }
+  let responses = await Promise.all(
+    logs.map((log) =>
+      request
+        .post("/logs/json")
+        .send(log)
+        .set("Authorization", `Bearer ${token}`)
+    )
+  );
+  responses = responses.map(({ status }) => status);
+  expect(responses).toEqual(expect.not.arrayContaining([409, 500]));
 });
 
 it("Create event", async () => {
   const python = spawn("py", ["../scripts/cooking_events.py", "test"]);
-  try {
-    const log = await new Promise((resolve, reject) => {
-      python.stdout.on("data", async function (data) {
-        console.log("Pipe data from python script ...");
-        console.log(data.toString());
-        const { body, status } = await request
-          .get(`/events/${device.id}`)
-          .set("Authorization", `Bearer ${token}`);
-        if (status !== 200) {
-          reject(`Error getting event. REsponse status: ${status}`);
-        } else {
-          resolve(body.rows[0]);
-        }
-      });
-      python.stderr.on("data", (data) => {
-        reject(`stderr: ${data.toString("utf8")}`);
-      });
-      python.on("close", (code) => {
-        reject(`child process exited with code ${code}`);
-      });
+  const log = await new Promise((resolve, reject) => {
+    python.stdout.on("data", async function (data) {
+      console.log("Pipe data from python script ...");
+      console.log(data.toString());
+      const { body, status } = await request
+        .get(`/events/${device.id}`)
+        .set("Authorization", `Bearer ${token}`);
+      if (status !== 200) {
+        reject(`Error getting event. Response status: ${status}`);
+      } else {
+        resolve(body.rows[0]);
+      }
     });
-    expect(log.duration).toBe(420);
-  } catch (error) {
-    console.log(error);
-  }
+    python.stderr.on("data", (data) => {
+      reject(`stderr: ${data.toString("utf8")}`);
+    });
+    python.on("close", (code) => {
+      reject(`child process exited with code ${code}`);
+    });
+  });
+
+  expect(log.duration).toBe(420);
+  expect(log.totalFuelMass * 1).toBeCloseTo(0.04, 2);
+  expect(log.averageTemperature * 1).toBeCloseTo(139.9, 2);
+  expect(log.maximumTemperature * 1).toBeCloseTo(168.63, 2);
+  expect(log.energyConsumption * 1).toBeCloseTo(0.18, 2);
+  expect(log.power * 1).toBeCloseTo(1.52, 2);
+  expect(log.usefulEnergy * 1).toBeCloseTo(0.09, 2);
+  expect(log.usefulThermalPower * 1).toBeCloseTo(0.76, 2);
+  expect(log.energySavings * 1).toBeCloseTo(0.04, 2);
 });

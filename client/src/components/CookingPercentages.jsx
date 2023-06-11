@@ -72,9 +72,9 @@ export default function CookingPercentages({ deviceID }) {
       width: 110,
       renderCell: (params) => (
         <Typography variant="body2">
-          {Number(params.row.fullLoad) * maxLoad +
-            Number(params.row.twoThirdsLoad) * maxLoad * 0.667 +
-            Number(params.row.halfLoad) * 0.5 * maxLoad}
+          {(Number(params.row.fullLoad) / 100) * maxLoad +
+            (Number(params.row.twoThirdsLoad) / 100) * maxLoad * 0.667 +
+            (Number(params.row.halfLoad) / 100) * 0.5 * maxLoad}
         </Typography>
       ),
     },

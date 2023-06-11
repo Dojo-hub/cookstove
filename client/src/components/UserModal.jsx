@@ -137,7 +137,6 @@ export default function UserModal({ open, setOpen, setReload }) {
               )}
               <LoadingButton
                 loading={loading}
-                loadingPosition="start"
                 variant="contained"
                 type="submit"
               >

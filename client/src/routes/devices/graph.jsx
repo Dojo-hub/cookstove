@@ -1,16 +1,16 @@
-import { Card, Stack } from '@mui/material';
-import dayjs from 'dayjs';
-import { useEffect, useState } from 'react';
-import { DatePicker, notification } from 'antd';
-import { DualAxes } from '@ant-design/plots';
-import { getLogs } from '../../api/device_logs';
+import { Card, Stack } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { DatePicker, notification } from "antd";
+import { DualAxes } from "@ant-design/plots";
+import { getLogs } from "../../api/device_logs";
 
 const { RangePicker } = DatePicker;
 
 const today = dayjs();
-const onedayago = dayjs().subtract(1, 'day');
+const onedayago = dayjs().subtract(1, "week");
 
-const openNotification = ({ message, description = '', type }) => {
+const openNotification = ({ message, description = "", type }) => {
   notification.open({
     type,
     message,
@@ -23,8 +23,8 @@ export default function Graph({ deviceID }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dates, setDates] = useState([
-    dayjs(onedayago).format('YYYY-MM-DD'),
-    dayjs(today).format('YYYY-MM-DD'),
+    dayjs(onedayago).format("YYYY-MM-DD"),
+    dayjs(today).format("YYYY-MM-DD"),
   ]);
 
   useEffect(() => {
@@ -54,11 +54,37 @@ export default function Graph({ deviceID }) {
 
   const config = {
     data: [data, data],
-    xField: 'day',
-    yField: ['temperature', 'weight'],
+    xField: "day",
+    yField: ["temperature", "weight"],
+    yAxis: {
+      temperature: {
+        title: {
+          text: "Temperature (°C)",
+          style: {
+            fill: "#000000",
+            fontWeight: "bold",
+          },
+        },
+        label: {
+          formatter: (v) => Math.round(v * 100) / 100,
+        },
+      },
+      weight: {
+        title: {
+          text: "Weight (kg)",
+          style: {
+            fill: "#000000",
+            fontWeight: "bold",
+          },
+        },
+        label: {
+          formatter: (v) => Math.round(v * 1000) / 100,
+        },
+      },
+    },
     xAxis: {
-      type: 'time',
-      mask: dayjs(dates[1]).diff(dates[0], 'day') < 2 ? 'HH:mm' : 'YYYY-MM-DD',
+      type: "time",
+      mask: dayjs(dates[1]).diff(dates[0], "day") < 2 ? "HH:mm" : "YYYY-MM-DD",
     },
   };
 
@@ -70,11 +96,11 @@ export default function Graph({ deviceID }) {
           allowClear={false}
           value={[dayjs(dates[0]), dayjs(dates[1])]}
           onChange={(dates, dateStrings) => {
-            if (dayjs(dateStrings[1]).diff(dateStrings[0], 'day') > 30) {
+            if (dayjs(dateStrings[1]).diff(dateStrings[0], "day") > 30) {
               openNotification({
-                message: 'Date range too large',
-                description: 'Date range should be less than a month.',
-                type: 'error',
+                message: "Date range too large",
+                description: "Date range should be less than a month.",
+                type: "error",
               });
               return;
             }
@@ -83,7 +109,7 @@ export default function Graph({ deviceID }) {
         />
       </Stack>
       <br />
-      <div style={{ position: 'relative', width: '100%' }}>
+      <div style={{ position: "relative", width: "100%" }}>
         <DualAxes width="100%" loading={loading} {...config} />
       </div>
     </Card>

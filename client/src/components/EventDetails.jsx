@@ -34,6 +34,32 @@ export default function EventDetails() {
     data: [data, data],
     xField: "timestamp",
     yField: ["temperature", "weight"],
+    yAxis: {
+      temperature: {
+        title: {
+          text: "Temperature (°C)",
+          style: {
+            fill: "#000000",
+            fontWeight: "bold",
+          },
+        },
+        label: {
+          formatter: (v) => Math.round(v * 100) / 100,
+        },
+      },
+      weight: {
+        title: {
+          text: "Weight (kg)",
+          style: {
+            fill: "#000000",
+            fontWeight: "bold",
+          },
+        },
+        label: {
+          formatter: (v) => Math.round(v * 1000) / 100,
+        },
+      },
+    },
   };
 
   return (

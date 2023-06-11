@@ -20,30 +20,31 @@ def event_calculations(device_id, event, event_id, cursor, cnx):
         if device[12] is None or device[11] is None or device[17] is None or device[27] is None or device[28] is None or device[29] is None:
             return
         max_load = float(device[12])
-        efficiency = device[11] / 100
-        baseline_efficiency = device[17] / 100
-        food_mass = float(device[27]) * max_load + float(device[28]) * max_load * 0.667 + float(device[29]) * max_load * 0.5
+        efficiency = Decimal(device[11] / 100)
+        baseline_efficiency = Decimal(device[17] / 100)
+        food_mass = float(device[27]) / 100 * max_load + float(device[28]) / 100 * max_load * 0.667 + float(device[29])/ 100 * max_load * 0.5
         # time difference between start_date and end_date
         duration = end_date - start_date
         duration = duration.total_seconds() / 3600
         total_temp = 0
         max_temp = 0
         total_fuel_mass = float(event[0][9])
-        for i, row in enumerate(event):
+        for i, row in enumerate(event[0:-1]):
             total_temp += float(row[3])
             max_temp = max(max_temp, float(row[3]))
-            
+
+        for i, row in enumerate(event):
             if i != 0 and i != len(event) - 1:
-                next_row = event[i + 1]
-                if abs(float(next_row[9]) - float(row[9])) > 0.05:
-                    fuel_mass = float(next_row[9]) - float(row[9])
+                prev_row = event[i - 1]
+                if abs(float(row[9]) - float(prev_row[9])) > 0.05:
+                    fuel_mass = float(row[9]) - float(prev_row[9])
                     total_fuel_mass += fuel_mass
 
 
         total_fuel_mass -= float(event[-1][9])
 
-        average_temp = total_temp / len(event)
-        energy_consumption = Decimal(food_mass) * Decimal(16) * Decimal(0.277778)
+        average_temp = total_temp / (len(event) - 1)
+        energy_consumption = Decimal(total_fuel_mass) * Decimal(16) * Decimal(0.277778)
         power = energy_consumption / Decimal(duration)
         useful_energy = 0
         useful_thermal_power = 0

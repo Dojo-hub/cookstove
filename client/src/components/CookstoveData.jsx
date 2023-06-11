@@ -147,8 +147,7 @@ const Item = ({ icon, symbol, title, value }) => (
       </Typography>
     </Stack>
     <Typography variant="body2">
-      {value}
-      {symbol}
+      {value} <span style={{ fontWeight: 600 }}>{symbol}</span>
     </Typography>
   </Stack>
 );
@@ -170,7 +169,10 @@ export default function CookstoveData() {
         );
         setData((state) =>
           state.map((item) => {
-            item.value = data[item.key];
+            if (item.key === "sumDuration") item.value = data[item.key] / 3600;
+            else item.value = data[item.key];
+            // set precision to 2 decimal places
+            item.value = Math.round(item.value * 100) / 100;
             return item;
           })
         );

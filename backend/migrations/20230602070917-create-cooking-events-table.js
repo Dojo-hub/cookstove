@@ -34,45 +34,45 @@ module.exports = {
           duration: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0.0,
           },
           averageTemperature: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0.0,
           },
           maximumTemperature: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0.0,
           },
           totalFuelMass: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0.0,
           },
           foodMass: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
             allowNull: false,
-            defaultValue: 0,
+            defaultValue: 0.0,
           },
           energyConsumption: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
           },
           power: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
           },
           usefulEnergy: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
           },
           usefulThermalPower: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
           },
           energySavings: {
-            type: Sequelize.DECIMAL,
+            type: Sequelize.DECIMAL(10, 4),
           },
-          created_at: Sequelize.DATE,
-          updated_at: Sequelize.DATE,
+          createdAt: Sequelize.DATE,
+          updatedAt: Sequelize.DATE,
         },
         { transaction }
       );

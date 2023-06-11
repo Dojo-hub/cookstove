@@ -32,6 +32,13 @@ export default function Analytics() {
         const { data } = await getAllEventsData(
           `?startDate=${dates[0]}&endDate=${dates[1]}&groupBy=${groupBy}`
         );
+        data.forEach((item) => {
+          for (const key in item) {
+            if (key !== "day" && key !== "month") item[key] = Number(item[key]);
+            if (key === "avgDuration")
+              item[key] = Math.round((item[key] / 3600) * 100) / 100;
+          }
+        });
         setData(data);
         setLoading(false);
       } catch (error) {
