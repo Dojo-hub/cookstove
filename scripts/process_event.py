@@ -1,9 +1,10 @@
 from decimal import Decimal, getcontext
+from datetime import datetime
 
 getcontext().prec = 10
 getcontext().rounding = 'ROUND_HALF_UP'
 
-def event_calculations(device_id, event, event_id, cursor, cnx):
+def event_calculations(device_id, event, cursor, cnx):
     cursor = cnx.cursor()
 
     start_date = event[0][1]
@@ -53,8 +54,28 @@ def event_calculations(device_id, event, event_id, cursor, cnx):
             useful_thermal_power = power * efficiency
         energy_savings = (energy_consumption / baseline_efficiency) - energy_consumption
 
-        query = "UPDATE Cooking_Events SET startDate = %s, endDate = %s, duration = %s, averageTemperature = %s, maximumTemperature = %s, totalFuelMass = %s, foodMass = %s, energyConsumption = %s, power = %s, usefulEnergy = %s, usefulThermalPower = %s, energySavings = %s WHERE id = %s"
-        cursor.execute(query, (start_date, end_date, duration * 3600, average_temp, max_temp, total_fuel_mass, food_mass, energy_consumption, power, useful_energy, useful_thermal_power, energy_savings, event_id))
+        
+        date = datetime.now()
+        query ="INSERT INTO Cooking_Events \
+            (deviceId, startDate, endDate, duration, averageTemperature, maximumTemperature, totalFuelMass, \
+            foodMass, energyConsumption, power, usefulEnergy, usefulThermalPower, energySavings, createdAt, updatedAt) \
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(query, (device_id, start_date, end_date, duration * 3600, average_temp, max_temp, total_fuel_mass,
+                               food_mass, energy_consumption, power, useful_energy, useful_thermal_power, energy_savings, date, date))
+        cnx.commit()
+        lastrowid = cursor.lastrowid
+
+        query = "UPDATE Device_logs SET event = %s WHERE id IN (%s);"
+        id_list = []
+        for row in event[0:-1]:
+            id_list.append(row[0])
+
+        placeholders = ', '.join(['%s'] * len(id_list))
+        formatted_query = query % (lastrowid, placeholders)
+
+        print(formatted_query)
+
+        cursor.execute(formatted_query, id_list)
         cnx.commit()
 
         

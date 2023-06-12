@@ -52,15 +52,7 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
                 break
                     
         if len(event) > 5:
-            date = datetime.datetime.now()
-            query = "INSERT INTO Cooking_Events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
-            cursor.execute(query, (device_id, date, date, date, date))
-            cnx.commit()
-            lastrowid = cursor.lastrowid
-            query = "UPDATE Device_logs SET event = %s WHERE id >= %s AND id < %s"
-            cursor.execute(query, (lastrowid, first_above_80, first_below_80))
-            cnx.commit()
-            event_calculations(device_id, event, lastrowid, cursor, cnx)
+            event_calculations(device_id, event, cursor, cnx)
         else:
             print("Range too small")
 
