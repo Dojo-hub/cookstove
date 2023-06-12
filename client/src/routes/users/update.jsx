@@ -83,7 +83,6 @@ export default function UpdateUser({ user }) {
           )}
           <LoadingButton
             loading={loading}
-            loadingPosition="start"
             variant="contained"
             type="submit"
             disabled={!change}
