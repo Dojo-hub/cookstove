@@ -10,7 +10,7 @@ def event_calculations(device_id, event, event_id, cursor, cnx):
     end_date = event[-1][1]
     timestamp = start_date.strftime('%Y-%m-%d')
 
-    query = "SELECT d.*, cp.* FROM devices AS d LEFT JOIN cooking_percentages AS cp ON d.id = cp.deviceId WHERE d.id = %s AND DATE(cp.startDate) <= %s AND DATE(cp.endDate) >= %s;"
+    query = "SELECT d.*, cp.* FROM Devices AS d LEFT JOIN Cooking_Percentages AS cp ON d.id = cp.deviceId WHERE d.id = %s AND DATE(cp.startDate) <= %s AND DATE(cp.endDate) >= %s;"
     cursor.execute(query, (device_id, timestamp, timestamp))
 
     rows = cursor.fetchall()
@@ -53,7 +53,7 @@ def event_calculations(device_id, event, event_id, cursor, cnx):
             useful_thermal_power = power * efficiency
         energy_savings = (energy_consumption / baseline_efficiency) - energy_consumption
 
-        query = "UPDATE cooking_events SET startDate = %s, endDate = %s, duration = %s, averageTemperature = %s, maximumTemperature = %s, totalFuelMass = %s, foodMass = %s, energyConsumption = %s, power = %s, usefulEnergy = %s, usefulThermalPower = %s, energySavings = %s WHERE id = %s"
+        query = "UPDATE Cooking_Events SET startDate = %s, endDate = %s, duration = %s, averageTemperature = %s, maximumTemperature = %s, totalFuelMass = %s, foodMass = %s, energyConsumption = %s, power = %s, usefulEnergy = %s, usefulThermalPower = %s, energySavings = %s WHERE id = %s"
         cursor.execute(query, (start_date, end_date, duration * 3600, average_temp, max_temp, total_fuel_mass, food_mass, energy_consumption, power, useful_energy, useful_thermal_power, energy_savings, event_id))
         cnx.commit()
 
