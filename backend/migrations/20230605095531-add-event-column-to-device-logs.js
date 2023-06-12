@@ -6,7 +6,7 @@ module.exports = {
     const transaction = await queryInterface.sequelize.transaction();
     try {
       await queryInterface.addColumn(
-        "device_logs",
+        "Device_logs",
         "event",
         {
           type: Sequelize.INTEGER,
@@ -15,7 +15,7 @@ module.exports = {
         },
         { transaction }
       );
-      await queryInterface.addConstraint("device_logs", {
+      await queryInterface.addConstraint("Device_logs", {
         fields: ["event"],
         type: "foreign key",
         name: "fk_device_logs_event",
@@ -34,6 +34,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.removeColumn("device_logs", "event");
+    await queryInterface.removeColumn("Device_logs", "event");
   },
 };

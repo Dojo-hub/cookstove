@@ -25,7 +25,7 @@ cnx = mysql.connector.connect(user=db_user, password=db_password, host=db_host, 
 cursor = cnx.cursor()
 
 def find_event(cursor, device_id, start_id, sn, limit=1000):
-    query = "SELECT * FROM device_logs WHERE id > %s AND temperature IS NOT NULL AND weight IS NOT NULL AND deviceSerialNumber = %s ORDER BY timestamp ASC LIMIT %s;"
+    query = "SELECT * FROM Device_logs WHERE id > %s AND temperature IS NOT NULL AND weight IS NOT NULL AND deviceSerialNumber = %s ORDER BY timestamp ASC LIMIT %s;"
     cursor.execute(query, (start_id, sn, limit))
 
     rows = cursor.fetchall()
@@ -53,11 +53,11 @@ def find_event(cursor, device_id, start_id, sn, limit=1000):
                     
         if len(event) > 5:
             date = datetime.datetime.now()
-            query = "INSERT INTO cooking_events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
+            query = "INSERT INTO Cooking_Events (deviceId, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s)"
             cursor.execute(query, (device_id, date, date, date, date))
             cnx.commit()
             lastrowid = cursor.lastrowid
-            query = "UPDATE device_logs SET event = %s WHERE id >= %s AND id < %s"
+            query = "UPDATE Device_logs SET event = %s WHERE id >= %s AND id < %s"
             cursor.execute(query, (lastrowid, first_above_80, first_below_80))
             cnx.commit()
             event_calculations(device_id, event, lastrowid, cursor, cnx)
@@ -99,7 +99,7 @@ def find_all_events(device):
     print("Total events found: " + str(events_count))
 
 
-query = "SELECT * FROM devices WHERE serialNumber IN (SELECT DISTINCT deviceSerialNumber FROM device_logs) AND maximumCookingLoad IS NOT NULL;"
+query = "SELECT * FROM Devices WHERE serialNumber IN (SELECT DISTINCT deviceSerialNumber FROM Device_logs) AND maximumCookingLoad IS NOT NULL;"
 cursor.execute(query)
 
 rows = cursor.fetchall()

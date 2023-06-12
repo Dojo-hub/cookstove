@@ -1,6 +1,7 @@
 const app = require("../index");
 const supertest = require("supertest");
 const { spawn } = require("child_process");
+const os = require("os");
 const logs = require("../helpers/testlogs");
 
 const request = supertest(app);
@@ -49,7 +50,8 @@ it("Add logs", async () => {
 });
 
 it("Create event", async () => {
-  const python = spawn("py", ["../scripts/cooking_events.py", "test"]);
+  const pythonCommand = os.platform() === "win32"? "py": "python3";
+  const python = spawn(pythonCommand, ["../scripts/cooking_events.py", "test"]);
   const log = await new Promise((resolve, reject) => {
     python.stdout.on("data", async function (data) {
       console.log("Pipe data from python script ...");

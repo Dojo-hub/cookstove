@@ -15,7 +15,7 @@ cnx = mysql.connector.connect(user=db_user, password=db_password, host=db_host, 
 cursor = cnx.cursor()
 
 # Get all device ids
-query = "SELECT id, createdAt FROM devices"
+query = "SELECT id, createdAt FROM Devices"
 cursor.execute(query)
 devices = cursor.fetchall()
 
@@ -24,7 +24,7 @@ def create_cooking_percentage(device_id, month, start_date, full_load=60, two_th
     end_date = start_date + datetime.timedelta(days=30)
     
     # Insert the cooking percentage into the table
-    query = "INSERT INTO cooking_percentages (deviceId, month, fullLoad, twoThirdsLoad, halfLoad, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO Cooking_Percentages (deviceId, month, fullLoad, twoThirdsLoad, halfLoad, startDate, endDate, createdAt, updatedAt) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
     values = (device_id, month, full_load, two_thirds_load, half_load, start_date, end_date, datetime.datetime.now(), datetime.datetime.now())
     cursor.execute(query, values)
     cnx.commit()
@@ -33,7 +33,7 @@ def create_cooking_percentage(device_id, month, start_date, full_load=60, two_th
 
 for device_id, start_date in devices:
     # Get the last row from cooking_percentages for the device
-    query = "SELECT * FROM cooking_percentages WHERE deviceId = %s ORDER BY id DESC LIMIT 1"
+    query = "SELECT * FROM Cooking_Percentages WHERE deviceId = %s ORDER BY id DESC LIMIT 1"
     cursor.execute(query, (device_id,))
     rows = cursor.fetchall()
 
