@@ -1,5 +1,6 @@
 from decimal import Decimal, getcontext
 from datetime import datetime
+import numpy as np
 
 getcontext().prec = 10
 getcontext().rounding = 'ROUND_HALF_UP'
@@ -54,7 +55,17 @@ def event_calculations(device_id, event, cursor, cnx):
             useful_thermal_power = power * efficiency
         energy_savings = (energy_consumption / baseline_efficiency) - energy_consumption
 
-        
+        # Replace nan values with 0
+        average_temp = np.nan_to_num(average_temp)
+        max_temp = np.nan_to_num(max_temp)
+        total_fuel_mass = np.nan_to_num(total_fuel_mass)
+        food_mass = np.nan_to_num(food_mass)
+        energy_consumption = np.nan_to_num(energy_consumption)
+        power = np.nan_to_num(power)
+        useful_energy = np.nan_to_num(useful_energy)
+        useful_thermal_power = np.nan_to_num(useful_thermal_power)
+        energy_savings = np.nan_to_num(energy_savings)
+
         date = datetime.now()
         query ="INSERT INTO Cooking_Events \
             (deviceId, startDate, endDate, duration, averageTemperature, maximumTemperature, totalFuelMass, \
@@ -72,9 +83,7 @@ def event_calculations(device_id, event, cursor, cnx):
 
         placeholders = ', '.join(['%s'] * len(id_list))
         formatted_query = query % (lastrowid, placeholders)
-
-        print(formatted_query)
-
+        
         cursor.execute(formatted_query, id_list)
         cnx.commit()
 
