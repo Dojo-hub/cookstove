@@ -65,8 +65,8 @@ export default function Dashboard() {
             </Stack>
           </Card>
         </Grid>
+        <CookstoveData />
       </Grid>
-      <CookstoveData />
     </>
   );
 }

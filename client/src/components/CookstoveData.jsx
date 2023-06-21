@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { DatePicker, notification } from "antd";
 import dayjs from "dayjs";
-import { Card, Stack, Typography } from "@mui/material";
+import { Card, Grid, Skeleton, Stack, Typography } from "@mui/material";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
+import EnergySavingsLeafIcon from "@mui/icons-material/EnergySavingsLeaf";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import ElectricMeterIcon from "@mui/icons-material/ElectricMeter";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import PowerIcon from "@mui/icons-material/Power";
 import { getCookstoveData } from "../api/cookstove_data";
 
 const { RangePicker } = DatePicker;
@@ -12,144 +19,103 @@ const threemonthsago = dayjs().subtract(3, "month");
 const items = [
   {
     id: 1,
-    icon: (
-      <img src="https://img.icons8.com/ios/25/000000/food.png" alt="food" />
-    ),
+    icon: <RestaurantMenuIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative food mass",
     key: "sumFoodMass",
     symbol: "kg",
   },
   {
     id: 2,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/gas-industry.png"
-        alt="fuel"
-      />
-    ),
+    icon: <WhatshotIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative fuel mass",
     key: "sumFuelMass",
     symbol: "kg",
   },
   {
     id: 3,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/energy-meter.png"
-        alt="energy"
-      />
-    ),
+    icon: <ElectricMeterIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative stove energy consumption",
     key: "sumEnergyConsumption",
     symbol: "kWh",
   },
   {
     id: 4,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/energy-meter.png"
-        alt="energy"
-      />
-    ),
+    icon: <ElectricMeterIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative useful stove energy consumption",
     key: "sumUsefulEnergy",
     symbol: "kWh",
   },
   {
     id: 5,
-    icon: (
-      <img src="https://img.icons8.com/ios/25/000000/clock.png" alt="clock" />
-    ),
+    icon: <AccessTimeIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative cooking duration in hours",
     key: "sumDuration",
     symbol: "h",
   },
   {
     id: 6,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/flash-on.png"
-        alt="energy saving"
-      />
-    ),
+    icon: <EnergySavingsLeafIcon sx={{ fontSize: "6em" }} />,
     title: "Cumulative energy savings",
     key: "sumEnergySavings",
     symbol: "kWh",
   },
   {
     id: 7,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/temperature.png"
-        alt="temperature"
-      />
-    ),
+    icon: <DeviceThermostatIcon sx={{ fontSize: "6em" }} />,
     title: "Maximum temperature",
     key: "maxTemperature",
     symbol: "°C",
   },
   {
     id: 8,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/temperature.png"
-        alt="temperature"
-      />
-    ),
+    icon: <DeviceThermostatIcon sx={{ fontSize: "6em" }} />,
     title: "Average temperature",
     key: "avgTemperature",
     symbol: "°C",
   },
   {
     id: 9,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/energy-meter.png"
-        alt="energy"
-      />
-    ),
+    icon: <ElectricMeterIcon sx={{ fontSize: "6em" }} />,
     title: "Average stove energy consumption per cooking event",
     key: "avgEnergyConsumption",
     symbol: "kWh",
   },
   {
     id: 10,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/energy-meter.png"
-        alt="energy"
-      />
-    ),
+    icon: <ElectricMeterIcon sx={{ fontSize: "6em" }} />,
     title: "Average useful stove energy per cooking event",
     key: "avgUsefulEnergy",
     symbol: "kWh",
   },
   {
     id: 11,
-    icon: (
-      <img
-        src="https://img.icons8.com/ios/25/000000/energy-meter.png"
-        alt="energy"
-      />
-    ),
+    icon: <PowerIcon sx={{ fontSize: "6em" }} />,
     title: "Average stove power per cooking event",
     key: "avgPower",
     symbol: "kW",
   },
 ];
 
-const Item = ({ icon, symbol, title, value }) => (
-  <Stack direction="row" alignItems="center" justifyContent="space-between">
-    <Stack direction="row" alignItems="center">
-      {icon}
-      <Typography ml={1 / 2} variant="body1">
-        {title}
-      </Typography>
-    </Stack>
-    <Typography variant="body2">
-      {value} <span style={{ fontWeight: 600 }}>{symbol}</span>
-    </Typography>
-  </Stack>
+const Item = ({ icon, loading, symbol, title, value }) => (
+  <Grid item xs={12} md={6}>
+    <Card sx={{ p: 4 }}>
+      <Stack direction="row" alignItems="center" spacing={4}>
+        {icon}
+        <div>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Typography variant="h4">
+              {value} {symbol}
+            </Typography>
+          )}
+          <Typography ml={1 / 2} variant="h6">
+            {title}
+          </Typography>
+        </div>
+      </Stack>
+    </Card>
+  </Grid>
 );
 
 export default function CookstoveData() {
@@ -186,32 +152,29 @@ export default function CookstoveData() {
   }, [dates]);
 
   return (
-    <Card sx={{ p: 2, mt: 2 }}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h5">Cookstove Data</Typography>
-        <RangePicker
-          defaultValue={[threemonthsago, today]}
-          allowClear={false}
-          value={[dayjs(dates[0]), dayjs(dates[1])]}
-          onChange={(dates, dateStrings) => {
-            setDates(dateStrings);
-          }}
-        />
-      </Stack>
-      <br />
-      {!loading && (
-        <Stack spacing={2}>
-          {data.map((item) => (
-            <Item
-              key={item.id}
-              icon={item.icon}
-              symbol={item.symbol}
-              title={item.title}
-              value={item.value}
-            />
-          ))}
+    <>
+      <Grid item xs={12}>
+        <Stack direction="row" alignItems="center">
+          <RangePicker
+            defaultValue={[threemonthsago, today]}
+            allowClear={false}
+            value={[dayjs(dates[0]), dayjs(dates[1])]}
+            onChange={(dates, dateStrings) => {
+              setDates(dateStrings);
+            }}
+          />
         </Stack>
-      )}
-    </Card>
+      </Grid>
+      {data.map((item) => (
+        <Item
+          key={item.id}
+          icon={item.icon}
+          loading={loading}
+          symbol={item.symbol}
+          title={item.title}
+          value={item.value}
+        />
+      ))}
+    </>
   );
 }
