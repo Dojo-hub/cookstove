@@ -100,6 +100,12 @@ const graphData = async (req, res) => {
         [sequelize.literal("AVG(energySavings)"), "avgEnergySavings"],
         [sequelize.literal("AVG(power)"), "avgPower"],
         [sequelize.literal("AVG(averageTemperature)"), "avgTemperature"],
+        [sequelize.literal("SUM(foodMass)"), "sumFoodMass"],
+        [sequelize.literal("SUM(totalFuelMass)"), "sumFuelMass"],
+        [sequelize.literal("SUM(energyConsumption)"), "sumEnergyConsumption"],
+        [sequelize.literal("SUM(usefulEnergy)"), "sumUsefulEnergy"],
+        [sequelize.literal("SUM(energySavings)"), "sumEnergySavings"],
+        [sequelize.literal("SUM(duration)"), "sumDuration"],
       ],
       group: [sequelize.fn("DATE_FORMAT", sequelize.col("startDate"), format)],
       order: [

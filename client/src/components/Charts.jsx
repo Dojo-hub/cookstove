@@ -11,8 +11,20 @@ const charts = [
     label: "hours",
   },
   {
+    title: "Cummulative Cooking Duration",
+    yField: "sumDuration",
+    color: "#6E44FF",
+    label: "hours",
+  },
+  {
     title: "Average Energy Consumption",
     yField: "avgEnergyConsumption",
+    color: "#EF7A85",
+    label: "kWh",
+  },
+  {
+    title: "Cummulative Energy Consumption",
+    yField: "sumEnergyConsumption",
     color: "#EF7A85",
     label: "kWh",
   },
@@ -23,10 +35,46 @@ const charts = [
     label: "kg",
   },
   {
+    title: "Cummulative Food Mass",
+    yField: "sumFoodMass",
+    color: "#FF1F93",
+    label: "kg",
+  },
+  {
     title: "Average Fuel Mass",
     yField: "avgFuelMass",
     color: "#FF90B3",
     label: "kg",
+  },
+  {
+    title: "Cummulative Fuel Mass",
+    yField: "sumFuelMass",
+    color: "#FF90B3",
+    label: "kg",
+  },
+  {
+    title: "Average Energy Savings",
+    yField: "avgEnergySavings",
+    color: "#EF7A85",
+    label: "kWh",
+  },
+  {
+    title: "Cummulative Energy Savings",
+    yField: "sumEnergySavings",
+    color: "#EF7A85",
+    label: "kWh",
+  },
+  {
+    title: "Average Useful Energy",
+    yField: "avgUsefulEnergy",
+    color: "#EF7A85",
+    label: "kWh",
+  },
+  {
+    title: "Cummulative Useful Energy",
+    yField: "sumUsefulEnergy",
+    color: "#EF7A85",
+    label: "kWh",
   },
   {
     title: "Average Power",
@@ -45,18 +93,6 @@ const charts = [
     yField: "maxTemperature",
     color: "#B892FF",
     label: "°C",
-  },
-  {
-    title: "Average Energy Savings",
-    yField: "avgEnergySavings",
-    color: "#EF7A85",
-    label: "kWh",
-  },
-  {
-    title: "Average Useful Energy",
-    yField: "avgUsefulEnergy",
-    color: "#EF7A85",
-    label: "kWh",
   },
 ];
 
@@ -97,9 +133,9 @@ export default function Charts({ data, groupBy, loading }) {
   }, [data]);
 
   return (
-    <Grid container spacing={2}>
+    <Grid container spacing={3}>
       {charts.map(({ color, label, title, yField }) => (
-        <Grid key={title} item xs={12}>
+        <Grid key={title} item xs={12} md={6}>
           <Card sx={{ p: 2 }}>
             <Typography variant="h6">{title}</Typography>
             {loading ? (

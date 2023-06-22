@@ -35,7 +35,7 @@ export default function Analytics() {
         data.forEach((item) => {
           for (const key in item) {
             if (key !== "day" && key !== "month") item[key] = Number(item[key]);
-            if (key === "avgDuration")
+            if (key === "avgDuration" || key === "sumDuration")
               item[key] = Math.round((item[key] / 3600) * 100) / 100;
           }
         });
