@@ -40,16 +40,18 @@ const eventLogs = async (req, res) => {
 
 const eventsData = async (req, res) => {
   try {
-    const { startDate, endDate } = req.query;
-    const events = await db.Cooking_Events.findOne({
-      where: {
-        startDate: {
-          [sequelize.Op.gte]: startDate,
-        },
-        endDate: {
-          [sequelize.Op.lte]: endDate,
-        },
+    const { deviceId, startDate, endDate } = req.query;
+    const where = {
+      startDate: {
+        [sequelize.Op.gte]: startDate,
       },
+      endDate: {
+        [sequelize.Op.lte]: endDate,
+      },
+    };
+    if (deviceId) where.deviceId = deviceId;
+    const events = await db.Cooking_Events.findOne({
+      where,
       attributes: [
         [sequelize.literal("SUM(duration)"), "sumDuration"],
         [sequelize.literal("MAX(maximumTemperature)"), "maxTemperature"],

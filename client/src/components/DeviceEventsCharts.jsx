@@ -56,8 +56,7 @@ export default function DeviceEventsChart({ id }) {
 
   return (
     <>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="h5">Cookstove Data</Typography>
+      <Stack direction="row" alignItems="center" justifyContent="end" mt={1}>
         <RangePicker
           defaultValue={[threemonthsago, today]}
           allowClear={false}

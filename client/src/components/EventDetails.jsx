@@ -65,7 +65,7 @@ export default function EventDetails() {
   return (
     <Card sx={{ p: 2, mt: 2 }}>
       <Stack alignItems="end">
-        <Typography variant="h6">Event logs</Typography>
+        <Typography variant="h6">Cooking Event logs</Typography>
       </Stack>
       <div style={{ position: "relative", width: "100%" }}>
         <DualAxes width="100%" loading={loading} {...config} />

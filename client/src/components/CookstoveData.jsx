@@ -118,7 +118,7 @@ const Item = ({ icon, loading, symbol, title, value }) => (
   </Grid>
 );
 
-export default function CookstoveData() {
+export default function CookstoveData({ deviceId }) {
   const [loading, setLoading] = useState(true);
   const [dates, setDates] = useState([
     dayjs(threemonthsago).format("YYYY-MM-DD"),
@@ -130,9 +130,9 @@ export default function CookstoveData() {
     const fetchCookstoveData = async () => {
       try {
         setLoading(true);
-        const { data } = await getCookstoveData(
-          `?startDate=${dates[0]}&endDate=${dates[1]}`
-        );
+        let query = `?startDate=${dates[0]}&endDate=${dates[1]}`;
+        if (deviceId) query = `${query}&deviceId=${deviceId}`;
+        const { data } = await getCookstoveData(query);
         setData((state) =>
           state.map((item) => {
             if (item.key === "sumDuration") item.value = data[item.key] / 3600;

@@ -43,12 +43,6 @@ export default function CookingPercentages({ deviceID }) {
       valueGetter: (params) => formatDate(params.row.startDate),
     },
     {
-      field: "endDate",
-      headerName: "End Date",
-      width: 120,
-      valueGetter: (params) => formatDate(params.row.endDate),
-    },
-    {
       field: "fullLoad",
       headerName: "Time Portion (Full Load)",
       width: 150,
@@ -72,9 +66,11 @@ export default function CookingPercentages({ deviceID }) {
       width: 110,
       renderCell: (params) => (
         <Typography variant="body2">
-          {(Number(params.row.fullLoad) / 100) * maxLoad +
+          {(
+            (Number(params.row.fullLoad) / 100) * maxLoad +
             (Number(params.row.twoThirdsLoad) / 100) * maxLoad * 0.667 +
-            (Number(params.row.halfLoad) / 100) * 0.5 * maxLoad}
+            (Number(params.row.halfLoad) / 100) * 0.5 * maxLoad
+          ).toFixed(2)}
         </Typography>
       ),
     },

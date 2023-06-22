@@ -102,14 +102,17 @@ export default function DeviceEventsTable({ deviceId }) {
         console.log(error);
       }
     };
-    fetchDeviceEvents();
-  }, [reload, page]);
+    if (deviceId) fetchDeviceEvents();
+  }, [deviceId, reload, page]);
 
   return (
     <Box mt={2}>
       <Typography variant="h6">Cooking Events</Typography>
       <Box sx={{ width: "100%" }}>
         <DataGrid
+          sx={{
+            cursor: "pointer",
+          }}
           rows={rows}
           columns={columns}
           loading={loading}
@@ -122,7 +125,14 @@ export default function DeviceEventsTable({ deviceId }) {
           disableSelectionOnClick
           onPageChange={(page, details) => setPage(page)}
           experimentalFeatures={{ newEditingApi: true }}
-          onRowClick={(params) => setEvent(params.row)}
+          onRowClick={(params) => {
+            setEvent(params.row);
+            window.scrollTo({
+              left: 0,
+              top: document.body.scrollHeight,
+              behavior: "smooth",
+            });
+          }}
         />
       </Box>
     </Box>

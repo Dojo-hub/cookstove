@@ -14,6 +14,7 @@ import CookingPercentages from "../../components/CookingPercentages";
 import DeviceEventsChart from "../../components/DeviceEventsCharts";
 import DeviceEventsTable from "../../components/DeviceEventsTable";
 import EventDetails from "../../components/EventDetails";
+import CookstoveData from "../../components/CookstoveData";
 
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
 
@@ -128,8 +129,10 @@ export default function details() {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
+        <Grid mt={1} container spacing={3}>
+          <CookstoveData deviceId={id} />
+        </Grid>
         <DeviceEventsContext.Provider value={{ event, setEvent }}>
-          <DeviceEventsChart id={id} />
           <DeviceEventsTable deviceId={id} />
           <EventDetails />
         </DeviceEventsContext.Provider>
@@ -185,12 +188,12 @@ export default function details() {
             </Grid>
           )}
         </Card>
-        <CookingPercentages deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <Logs deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={3}>
+        <DeviceEventsChart id={id} />
         <Graph deviceID={id} />
       </TabPanel>
       <TabPanel value={value} index={4}>
@@ -225,6 +228,9 @@ export default function details() {
                 </LoadingButton>
               </Stack>
             </Card>
+          </Grid>
+          <Grid item xs={12}>
+            <CookingPercentages deviceID={id} />
           </Grid>
         </Grid>
       </TabPanel>

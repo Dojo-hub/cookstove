@@ -1,4 +1,4 @@
-import { Card, Stack } from "@mui/material";
+import { Card, Stack, Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { DatePicker, notification } from "antd";
@@ -90,7 +90,8 @@ export default function Graph({ deviceID }) {
 
   return (
     <Card sx={{ p: 2, mt: 2 }}>
-      <Stack alignItems="end">
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
+        <Typography variant="h6">Logs</Typography>
         <RangePicker
           defaultValue={[onedayago, today]}
           allowClear={false}
