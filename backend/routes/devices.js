@@ -7,15 +7,11 @@ router.get("/", device.getAll);
 
 router.get("/:id", device.getOne);
 
-router.get(
-  "/:id/monthly-cooking-percentages",
-  device.getMonthlyCookingPercentages
-);
+router.get("/:id/cooking-percentages", device.getCookingPercentages);
 
-router.put(
-  "/:id/monthly-cooking-percentages",
-  device.updateMonthlyCookingPercentages
-);
+router.post("/:id/cooking-percentages", device.createCookingPercentages);
+
+router.put("/:id/cooking-percentages", device.updateCookingPercentages);
 
 router.post("/", device.addOne);
 

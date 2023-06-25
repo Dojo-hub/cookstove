@@ -1,13 +1,18 @@
 import * as React from "react";
+import dayjs from "dayjs";
 import { Box, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Card, Modal, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { Stack } from "@mui/system";
 import { notification } from "antd";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import {
-  getMonthlyCookingPercentages,
-  updateMonthlyCookingPercentages,
+  createCookingPercentages,
+  getCookingPercentages,
+  updateCookingPercentages,
 } from "../api/devices";
 import LoadingButton from "@mui/lab/LoadingButton/LoadingButton";
 
@@ -32,11 +37,6 @@ export default function CookingPercentages({ deviceID }) {
 
   const columns = [
     {
-      field: "month",
-      headerName: "Name",
-      width: 120,
-    },
-    {
       field: "startDate",
       headerName: "Start Date",
       width: 120,
@@ -45,19 +45,19 @@ export default function CookingPercentages({ deviceID }) {
     {
       field: "fullLoad",
       headerName: "Time Portion (Full Load)",
-      width: 150,
+      width: 180,
       valueGetter: (params) => `${params.row.fullLoad}%`,
     },
     {
       field: "twoThirdsLoad",
       headerName: "Time Portion (2/3 Load)",
-      width: 150,
+      width: 180,
       valueGetter: (params) => `${params.row.twoThirdsLoad}%`,
     },
     {
       field: "halfLoad",
       headerName: "Time Portion (1/2 Load)",
-      width: 110,
+      width: 180,
       valueGetter: (params) => `${params.row.halfLoad}%`,
     },
     {
@@ -98,7 +98,7 @@ export default function CookingPercentages({ deviceID }) {
     const fetchMonthlyPercentages = async () => {
       try {
         setLoading(true);
-        const { data } = await getMonthlyCookingPercentages(deviceID);
+        const { data } = await getCookingPercentages(deviceID);
         setMaxLoad(Number(data.device.maximumCookingLoad || 0));
         setRows(data.device.monthlyCookingPercentages);
         setCount(data.count);
@@ -111,9 +111,24 @@ export default function CookingPercentages({ deviceID }) {
     fetchMonthlyPercentages();
   }, [reload, page]);
 
+  const handleClick = () => {
+    setItem({});
+    setOpenEditModal(true);
+  };
+
   return (
     <Box mt={2}>
-      <Typography variant="h6">Monthly Cooking Percentages</Typography>
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <Typography variant="h6">Cooking Percentages</Typography>
+        <Button variant="contained" onClick={handleClick}>
+          Create
+        </Button>
+      </Stack>
       <Box sx={{ width: "100%" }}>
         <DataGrid
           rows={rows}
@@ -167,17 +182,21 @@ const EditModal = ({ open, setOpen, item, setReload }) => {
       fullLoad: 0,
       twoThirdsLoad: 0,
       halfLoad: 0,
-      month: "",
+      startDate: dayjs(new Date()),
     }
   );
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState("Edit");
 
   const handleClose = () => {
     setOpen(false);
   };
 
   useEffect(() => {
-    if (!item.row) return;
+    if (!item.row) {
+      setMode("Create");
+      return;
+    }
     setData(item.row);
   }, [item]);
 
@@ -198,7 +217,9 @@ const EditModal = ({ open, setOpen, item, setReload }) => {
     }
     try {
       setLoading(true);
-      await updateMonthlyCookingPercentages(data.id, data);
+      if (mode === "Create") {
+        await createCookingPercentages(data);
+      } else await updateCookingPercentages(data.id, data);
       setLoading(false);
       setReload((prev) => prev + 1);
       handleClose();
@@ -217,16 +238,18 @@ const EditModal = ({ open, setOpen, item, setReload }) => {
       <Card sx={style}>
         <form onSubmit={handleSubmit}>
           <Stack spacing={2} p={2}>
-            <Typography variant="h6">Edit Monthly Time Portions</Typography>
-            <TextField
-              label="Name"
-              name="month"
-              variant="outlined"
-              fullWidth
-              value={data.month}
-              disabled
-              onChange={handleChange}
-            />
+            <Typography variant="h6">{mode} Time Portions</Typography>
+            {mode === "Create" && (
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  value={data.startDate}
+                  onChange={(val) =>
+                    setData((state) => ({ ...state, startDate: val }))
+                  }
+                />
+              </LocalizationProvider>
+            )}
             <TextField
               type="number"
               label="Full Load (%)"

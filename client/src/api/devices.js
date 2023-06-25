@@ -21,12 +21,16 @@ export function getOne(id) {
   return axiosInstance.get(`/${id}`);
 }
 
-export function getMonthlyCookingPercentages(id) {
-  return axiosInstance.get(`/${id}/monthly-cooking-percentages`);
+export function getCookingPercentages(id) {
+  return axiosInstance.get(`/${id}/cooking-percentages`);
 }
 
-export function updateMonthlyCookingPercentages(id, data) {
-  return axiosInstance.put(`/${id}/monthly-cooking-percentages`, data);
+export function createCookingPercentages(id, data) {
+  return axiosInstance.post(`/${id}/cooking-percentages`, data);
+}
+
+export function updateCookingPercentages(id, data) {
+  return axiosInstance.put(`/${id}/cooking-percentages`, data);
 }
 
 export function updateDevice({ id, ...rest }) {

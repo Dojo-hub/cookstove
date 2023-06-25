@@ -126,7 +126,7 @@ export default function UpdateDevice({ device }) {
     const renderField = (field) => {
       if (field.type === "select") {
         return (
-          <Grid item xs={6}>
+          <Grid item xs={6} key={field.name}>
             <FormControl fullWidth>
               <InputLabel id={field.name}>{field.label}</InputLabel>
               <Select
@@ -136,7 +136,7 @@ export default function UpdateDevice({ device }) {
                 label={field.label}
                 required
                 onChange={formik.handleChange}
-                value={formik.values[field.name]}
+                value={formik.values[field.name] || ""}
               >
                 {field.options.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -157,7 +157,7 @@ export default function UpdateDevice({ device }) {
           label={field.label}
           required
           onChange={formik.handleChange}
-          value={formik.values[field.name]}
+          value={formik.values[field.name] || ""}
         />
       );
     };

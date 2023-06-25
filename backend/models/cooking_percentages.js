@@ -18,7 +18,6 @@ module.exports = (sequelize, DataTypes) => {
   Cooking_Percentages.init(
     {
       deviceId: DataTypes.INTEGER,
-      month: DataTypes.STRING,
       fullLoad: DataTypes.DECIMAL,
       twoThirdsLoad: DataTypes.DECIMAL,
       halfLoad: DataTypes.DECIMAL,
