@@ -71,3 +71,17 @@ it("Fail to get devices without token", async () => {
   const response = await request.get("/devices");
   expect(response.status).toBe(403);
 });
+
+it("Create cooking percentages", async () => {
+  const response = await request
+    .post("/devices/1/cooking-percentages")
+    .send({
+      startDate: new Date(),
+      fullLoad: 50,
+      twoThirdsLoad: 30,
+      halfLoad: 20,
+    })
+    .set("Authorization", `Bearer ${token}`);
+  expect(response.status).toBe(200);
+  expect(response.body).toHaveProperty("data");
+});

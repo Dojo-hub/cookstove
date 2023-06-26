@@ -3,6 +3,7 @@ const {
   Device_logs,
   log_files,
   Cooking_Percentages,
+  sequelize,
 } = require("../../models/index");
 const httpError = require("../../helpers/httpError");
 const { Op } = require("sequelize");
@@ -81,7 +82,7 @@ const getOne = async (req, res) => {
 
 const createCookingPercentages = async (req, res) => {
   const { id } = req.params;
-  const { fullLoad, twoThirdLoad, oneThirdLoad, startDate } = req.body;
+  const { fullLoad, twoThirdsLoad, halfLoad, startDate } = req.body;
 
   try {
     // Start a transaction
@@ -133,8 +134,8 @@ const createCookingPercentages = async (req, res) => {
         startDate,
         endDate: existingRow ? existingRow.endDate : new Date(253402300000000),
         fullLoad,
-        twoThirdLoad,
-        oneThirdLoad,
+        twoThirdsLoad,
+        halfLoad,
         deviceId: id,
       },
       { transaction }
