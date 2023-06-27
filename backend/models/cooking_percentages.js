@@ -22,7 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       twoThirdsLoad: DataTypes.DECIMAL,
       halfLoad: DataTypes.DECIMAL,
       startDate: DataTypes.DATE,
-      endDate: DataTypes.DATE,
     },
     {
       sequelize,

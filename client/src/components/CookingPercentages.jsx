@@ -147,6 +147,7 @@ export default function CookingPercentages({ deviceID }) {
       </Box>
       {!loading && (
         <EditModal
+          deviceID={deviceID}
           open={openEditModal}
           setOpen={setOpenEditModal}
           item={item}
@@ -176,15 +177,13 @@ const openNotification = ({ message, description = "", type }) => {
   });
 };
 
-const EditModal = ({ open, setOpen, item, setReload }) => {
-  const [data, setData] = useState(
-    item.row || {
-      fullLoad: 0,
-      twoThirdsLoad: 0,
-      halfLoad: 0,
-      startDate: dayjs(new Date()),
-    }
-  );
+const EditModal = ({ deviceID, open, setOpen, item, setReload }) => {
+  const [data, setData] = useState({
+    fullLoad: 0,
+    twoThirdsLoad: 0,
+    halfLoad: 0,
+    startDate: dayjs(new Date()),
+  });
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState("Edit");
 
@@ -197,7 +196,7 @@ const EditModal = ({ open, setOpen, item, setReload }) => {
       setMode("Create");
       return;
     }
-    setData(item.row);
+    setData({ ...item.row, startDate: dayjs(item.row?.startDate) });
   }, [item]);
 
   const handleSubmit = async (e) => {
@@ -218,7 +217,7 @@ const EditModal = ({ open, setOpen, item, setReload }) => {
     try {
       setLoading(true);
       if (mode === "Create") {
-        await createCookingPercentages(data);
+        await createCookingPercentages(deviceID, data);
       } else await updateCookingPercentages(data.id, data);
       setLoading(false);
       setReload((prev) => prev + 1);

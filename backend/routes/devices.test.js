@@ -19,6 +19,7 @@ const device = {
 };
 
 let token;
+let deviceId;
 
 beforeAll(async () => {
   const { body } = await request.post("/register").send(user);
@@ -30,13 +31,14 @@ it("Add a device", async () => {
     .post("/devices/")
     .send(device)
     .set("Authorization", `Bearer ${token}`);
+  deviceId = response.body.device.id;
   expect(response.status).toBe(200);
   expect(response.body).toHaveProperty("device");
 });
 
 it("Get one device", async () => {
   const response = await request
-    .get("/devices/1")
+    .get(`/devices/${deviceId}`)
     .set("Authorization", `Bearer ${token}`);
   expect(response.status).toBe(200);
   expect(response.body).toHaveProperty("device");
@@ -52,29 +54,16 @@ it("Get all devices", async () => {
 
 it("Update device", async () => {
   const response = await request
-    .put("/devices/1")
+    .put(`/devices/${deviceId}`)
     .send({ simID: "13" })
     .set("Authorization", `Bearer ${token}`);
   expect(response.status).toBe(201);
   expect(response.body).toHaveProperty("device");
 });
 
-it("Delete device", async () => {
-  const response = await request
-    .delete("/devices/1")
-    .set("Authorization", `Bearer ${token}`);
-  expect(response.status).toBe(200);
-  expect(response.body).toHaveProperty("device");
-});
-
-it("Fail to get devices without token", async () => {
-  const response = await request.get("/devices");
-  expect(response.status).toBe(403);
-});
-
 it("Create cooking percentages", async () => {
   const response = await request
-    .post("/devices/1/cooking-percentages")
+    .post(`/devices/${deviceId}/cooking-percentages`)
     .send({
       startDate: new Date(),
       fullLoad: 50,
@@ -84,4 +73,25 @@ it("Create cooking percentages", async () => {
     .set("Authorization", `Bearer ${token}`);
   expect(response.status).toBe(200);
   expect(response.body).toHaveProperty("data");
+});
+
+it("Get cooking percentages", async () => {
+  const response = await request
+    .get(`/devices/${deviceId}/cooking-percentages`)
+    .set("Authorization", `Bearer ${token}`);
+  expect(response.status).toBe(200);
+  expect(response.body.device).toHaveProperty("monthlyCookingPercentages");
+});
+
+it("Delete device", async () => {
+  const response = await request
+    .delete(`/devices/${deviceId}`)
+    .set("Authorization", `Bearer ${token}`);
+  expect(response.status).toBe(200);
+  expect(response.body).toHaveProperty("device");
+});
+
+it("Fail to get devices without token", async () => {
+  const response = await request.get("/devices");
+  expect(response.status).toBe(403);
 });

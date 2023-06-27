@@ -84,67 +84,21 @@ const createCookingPercentages = async (req, res) => {
   const { id } = req.params;
   const { fullLoad, twoThirdsLoad, halfLoad, startDate } = req.body;
 
+  if (!isValidDate(startDate))
+    return res.status(400).send({ message: "Invalid date" });
+
+  if (isNaN(fullLoad) || isNaN(twoThirdsLoad) || isNaN(halfLoad))
+    return res.status(400).send({ message: "Invalid cooking percentages" });
+
   try {
-    // Start a transaction
-    const transaction = await sequelize.transaction();
-
-    // Find the row where startDate is less than the new startDate and endDate is greater than the new startDate
-    const existingRow = await Cooking_Percentages.findOne({
-      where: {
-        deviceId: id,
-        startDate: {
-          [Op.lt]: new Date(startDate),
-        },
-        endDate: {
-          [Op.gt]: new Date(startDate),
-        },
-      },
-      transaction,
+    const data = await Cooking_Percentages.create({
+      startDate,
+      fullLoad,
+      twoThirdsLoad,
+      halfLoad,
+      deviceId: id,
     });
-
-    // Update the existing row's endDate if found
-    if (existingRow) {
-      await existingRow.update(
-        {
-          endDate: new Date(startDate),
-        },
-        { transaction }
-      );
-    }
-
-    // Update the endDate of the last row if needed
-    await Cooking_Percentages.update(
-      {
-        endDate: new Date(startDate),
-      },
-      {
-        where: {
-          deviceId: id,
-          endDate: {
-            [Op.gt]: new Date(startDate),
-          },
-        },
-      },
-      { transaction }
-    );
-
-    // Create a new row with the provided data
-    const newRow = await Cooking_Percentages.create(
-      {
-        startDate,
-        endDate: existingRow ? existingRow.endDate : new Date(253402300000000),
-        fullLoad,
-        twoThirdsLoad,
-        halfLoad,
-        deviceId: id,
-      },
-      { transaction }
-    );
-
-    // Commit the transaction
-    await transaction.commit();
-
-    res.send({ data: newRow });
+    res.send({ data });
   } catch (error) {
     console.log(error);
     res.status(500).send();
@@ -161,7 +115,7 @@ const getCookingPercentages = async (req, res) => {
       as: "monthlyCookingPercentages",
       limit,
       offset: page * limit,
-      order: [["createdAt", "DESC"]],
+      order: [["startDate", "ASC"]],
     };
     const device = await Device.findOne({
       where: { id },
@@ -209,8 +163,6 @@ const addOne = async (req, res) => {
     await Cooking_Percentages.create({
       deviceId: device.id,
       startDate: new Date(),
-      // endDate is '9999-12-31'
-      endDate: new Date(253402300000000),
       fullLoad: 60,
       twoThirdsLoad: 20,
       halfLoad: 10,

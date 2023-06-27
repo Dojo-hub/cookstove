@@ -69,11 +69,17 @@ export default function details() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [device, setDevice] = useState({});
   const [loading, setLoading] = useState(true);
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(parseInt(searchParams.get("tab")) || 0);
   const [deviceName, setDeviceName] = useState("");
   const [deleteBtnLoading, setDeleteBtnLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(false);
   const [event, setEvent] = useState({});
+
+  useEffect(() => {
+    if (searchParams.get("tab")) {
+      setValue(parseInt(searchParams.get("tab")));
+    }
+  }, [searchParams.get("tab")]);
 
   useEffect(() => {
     const fetchDevice = async () => {
@@ -91,7 +97,7 @@ export default function details() {
   }, []);
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
+    setSearchParams({ name: searchParams.get("name"), tab: newValue });
   };
 
   const handleDelete = async () => {

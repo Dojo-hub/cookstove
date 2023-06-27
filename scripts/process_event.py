@@ -12,19 +12,41 @@ def event_calculations(device_id, event, cursor, cnx):
     end_date = event[-1][1]
     timestamp = start_date.strftime('%Y-%m-%d')
 
-    query = "SELECT d.*, cp.* FROM Devices AS d LEFT JOIN Cooking_Percentages AS cp ON d.id = cp.deviceId WHERE d.id = %s AND DATE(cp.startDate) <= %s AND DATE(cp.endDate) >= %s;"
+    query = "SELECT \
+            d.maximumCookingLoad, \
+            d.stoveEfficiency, \
+            d.baselineEfficiency, \
+            cp.fullLoad, \
+            cp.twoThirdsLoad, \
+            cp.halfLoad, \
+            cp.startDate, \
+            cp.endDate \
+            FROM \
+            Devices AS d \
+            LEFT JOIN \
+            ( \
+                SELECT \
+                *, \
+                COALESCE(LEAD(startDate) OVER (ORDER BY startDate), DATE('9999-12-31')) AS endDate \
+                FROM \
+                Cooking_Percentages \
+            ) AS cp ON d.id = cp.deviceId \
+            WHERE \
+            d.id = %s \
+            AND DATE(cp.startDate) <= %s \
+            AND DATE(endDate) >= %s;"
     cursor.execute(query, (device_id, timestamp, timestamp))
 
     rows = cursor.fetchall()
 
     if len(rows) > 0:
         device = rows[0]
-        if device[12] is None or device[11] is None or device[17] is None or device[27] is None or device[28] is None or device[29] is None:
+        if device[0] is None or device[1] is None or device[2] is None or device[3] is None or device[4] is None or device[5] is None:
             return
-        max_load = float(device[12])
-        efficiency = Decimal(device[11] / 100)
-        baseline_efficiency = Decimal(device[17] / 100)
-        food_mass = float(device[27]) / 100 * max_load + float(device[28]) / 100 * max_load * 0.667 + float(device[29])/ 100 * max_load * 0.5
+        max_load = float(device[0])
+        efficiency = Decimal(device[1] / 100)
+        baseline_efficiency = Decimal(device[2] / 100)
+        food_mass = float(device[3]) / 100 * max_load + float(device[4]) / 100 * max_load * 0.667 + float(device[5])/ 100 * max_load * 0.5
         # time difference between start_date and end_date
         duration = end_date - start_date
         duration = duration.total_seconds() / 3600
