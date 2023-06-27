@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useFormik } from "formik";
 import { updateDevice } from "../../api/devices";
 import {
@@ -14,6 +14,8 @@ import {
 import MuiTextField from "@mui/material/TextField";
 import { useEffect } from "react";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useSearchParams } from "react-router-dom";
+import { DeviceContext } from "./details";
 
 const fields = [
   { label: "Name", name: "name" },
@@ -96,25 +98,38 @@ const TextField = (props) => (
   </Grid>
 );
 
-export default function UpdateDevice({ device }) {
+export default function UpdateDevice() {
+  const { device, setDevice } = useContext(DeviceContext);
+
   const [change, setChange] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const formik = useFormik({
     initialValues: device,
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        await updateDevice(values);
+        const { data } = await updateDevice(values);
         setLoading(false);
-        window.location.reload();
+        setDevice(data.device);
+        setSearchParams({ name: searchParams.get("name"), tab: 1 });
       } catch (error) {
         setLoading(false);
         console.log(error);
       }
     },
   });
+
+  useEffect(() => {
+    if (device) {
+      formik.setValues((prevValues) => ({
+        ...prevValues,
+        ...device,
+      }));
+    }
+  }, [device]);
 
   useEffect(() => {
     if (JSON.stringify(device) === JSON.stringify(formik.values))

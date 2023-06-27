@@ -1,11 +1,20 @@
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Card, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Grid,
+  IconButton,
+  Stack,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import MuiTextField from "@mui/material/TextField";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { createContext, Fragment, useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { notification } from "antd";
 import { deleteDevice, getOne } from "../../api/devices";
-import BackButton from "../../components/BackButton";
 import Loading from "../../components/Loading";
 import Graph from "./graph";
 import Logs from "./logs";
@@ -19,6 +28,7 @@ import CookstoveData from "../../components/CookstoveData";
 const TextField = (props) => <MuiTextField fullWidth {...props} />;
 
 export const DeviceEventsContext = createContext();
+export const DeviceContext = createContext();
 
 const openNotification = ({ message, description = "", type }) => {
   notification.open({
@@ -121,8 +131,10 @@ export default function details() {
   };
 
   return (
-    <Fragment>
-      <BackButton />
+    <DeviceContext.Provider value={{ device, setDevice }}>
+      <IconButton onClick={() => navigate("devices")}>
+        <ArrowBackIcon />
+      </IconButton>
       <Typography variant="h4">Device: {searchParams.get("name")}</Typography>
       <br />
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -205,7 +217,7 @@ export default function details() {
       <TabPanel value={value} index={4}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8}>
-            <UpdateDevice device={device} />
+            <UpdateDevice />
           </Grid>
           <Grid item xs={12} md={4}>
             <Card sx={{ p: 2, mt: 4, width: "100%" }}>
@@ -240,6 +252,6 @@ export default function details() {
           </Grid>
         </Grid>
       </TabPanel>
-    </Fragment>
+    </DeviceContext.Provider>
   );
 }

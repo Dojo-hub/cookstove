@@ -194,9 +194,10 @@ const EditModal = ({ deviceID, open, setOpen, item, setReload }) => {
   useEffect(() => {
     if (!item.row) {
       setMode("Create");
-      return;
+    } else {
+      setMode("Edit");
+      setData({ ...item.row, startDate: dayjs(item.row?.startDate) });
     }
-    setData({ ...item.row, startDate: dayjs(item.row?.startDate) });
   }, [item]);
 
   const handleSubmit = async (e) => {

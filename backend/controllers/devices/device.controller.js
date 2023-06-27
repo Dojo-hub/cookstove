@@ -181,7 +181,11 @@ const addOne = async (req, res) => {
 const updateOne = async (req, res) => {
   try {
     const { id } = req.params;
-    const device = await Device.update(req.body, { where: { id } });
+    await Device.update(req.body, {
+      where: { id },
+      returning: true,
+    });
+    const device = await Device.findOne({ where: { id } });
     res.status(201).send({ device });
   } catch (error) {
     console.log(error);
