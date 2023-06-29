@@ -18,3 +18,5 @@ __pycache__
 yarn-error.log
 
 *.swp
+
+scripts/*.swo
