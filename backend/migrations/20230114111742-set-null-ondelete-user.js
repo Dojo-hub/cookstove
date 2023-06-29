@@ -4,9 +4,9 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.sequelize.transaction(async (t) => {
-      await queryInterface.removeConstraint("Devices", "Devices_ibfk_1", {
-        transaction: t,
-      });
+      // await queryInterface.removeConstraint("Devices", "Devices_ibfk_1", {
+      //   transaction: t,
+      // });
       await queryInterface.addConstraint("Devices", {
         fields: ["userId"],
         type: "foreign key",

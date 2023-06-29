@@ -16,7 +16,7 @@ module.exports = {
     await queryInterface.addColumn("Cooking_Percentages", "endDate", {
       type: Sequelize.DATE,
       allowNull: false,
-      defaultValue: Sequelize.NOW,
+      defaultValue: "2023-01-01",
     });
   },
 };
