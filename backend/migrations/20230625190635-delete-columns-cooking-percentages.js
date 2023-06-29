@@ -11,10 +11,12 @@ module.exports = {
     await queryInterface.addColumn("Cooking_Percentages", "month", {
       type: Sequelize.STRING,
       allowNull: false,
+      defaultValue: "January",
     });
     await queryInterface.addColumn("Cooking_Percentages", "endDate", {
       type: Sequelize.DATE,
       allowNull: false,
+      defaultValue: Sequelize.NOW,
     });
   },
 };
