@@ -1,10 +1,10 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const axiosInstance = axios.create({
   baseURL:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : process.env.BASE_URL,
+    process.env.NODE_ENV === "development" ? "http://localhost:3000" : BASE_URL,
 });
 
 axiosInstance.interceptors.request.use((config) => {

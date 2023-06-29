@@ -1,10 +1,12 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const axiosInstance = axios.create({
   baseURL:
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000/logs"
-      : `${process.env.BASE_URL}/logs`,
+      : `${BASE_URL}/logs`,
 });
 
 axiosInstance.interceptors.request.use((config) => {
@@ -14,5 +16,5 @@ axiosInstance.interceptors.request.use((config) => {
 });
 
 export function getLogs(deviceID, query) {
-    return axiosInstance.get(`/${deviceID}${query}`);
+  return axiosInstance.get(`/${deviceID}${query}`);
 }
