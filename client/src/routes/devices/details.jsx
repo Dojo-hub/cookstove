@@ -132,7 +132,7 @@ export default function details() {
 
   return (
     <DeviceContext.Provider value={{ device, setDevice }}>
-      <IconButton onClick={() => navigate("devices")}>
+      <IconButton onClick={() => navigate("/devices")}>
         <ArrowBackIcon />
       </IconButton>
       <Typography variant="h4">Device: {searchParams.get("name")}</Typography>

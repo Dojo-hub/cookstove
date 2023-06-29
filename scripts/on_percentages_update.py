@@ -39,9 +39,9 @@ query = "SELECT cp.id, \
                 LIMIT 1), \
                 DATE('9999-12-31') \
             ) AS endDate, \
-            devices.maximumCookingLoad \
+            Devices.maximumCookingLoad \
             FROM Cooking_Percentages AS cp \
-            LEFT JOIN Devices ON devices.id = cp.deviceId \
+            LEFT JOIN Devices ON Devices.id = cp.deviceId \
             WHERE \
             cp.updatedAt > UTC_TIMESTAMP() - INTERVAL 30 SECOND;"
 
