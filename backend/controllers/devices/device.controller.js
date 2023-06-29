@@ -2,6 +2,7 @@ const {
   Device,
   Device_logs,
   log_files,
+  Cooking_Events,
   Cooking_Percentages,
   sequelize,
 } = require("../../models/index");
@@ -179,15 +180,42 @@ const addOne = async (req, res) => {
 };
 
 const updateOne = async (req, res) => {
+  const { id } = req.params;
+  const transaction = await sequelize.transaction();
   try {
-    const { id } = req.params;
+    const { baselineEfficiency, stoveEfficiency } = req.body;
+    if (baselineEfficiency || stoveEfficiency) {
+      // recalculate usefulEnergy, usefulThermalPower, and energySavings for all device events
+      const efficiency = parseFloat(stoveEfficiency) / 100;
+      const baseline = parseFloat(baselineEfficiency) / 100;
+      const events = await Cooking_Events.findAll({ where: { deviceId: id } });
+      for (let i = 0; i < events.length; i++) {
+        const event = events[i];
+        const { energyConsumption, id, power } = event;
+        if (!energyConsumption || !power) continue;
+        const usefulEnergy = energyConsumption * efficiency;
+        const usefulThermalPower = power * efficiency;
+        const energySavings = energyConsumption / baseline - energyConsumption;
+        await Cooking_Events.update(
+          {
+            usefulEnergy,
+            usefulThermalPower,
+            energySavings,
+          },
+          { where: { id }, transaction }
+        );
+      }
+    }
     await Device.update(req.body, {
       where: { id },
       returning: true,
+      transaction,
     });
+    transaction.commit();
     const device = await Device.findOne({ where: { id } });
     res.status(201).send({ device });
   } catch (error) {
+    transaction.rollback();
     console.log(error);
     res.status(500).send();
   }

@@ -50,7 +50,7 @@ it("Add logs", async () => {
 });
 
 it("Create event", async () => {
-  const pythonCommand = os.platform() === "win32"? "py": "python3";
+  const pythonCommand = os.platform() === "win32" ? "py" : "python3";
   const python = spawn(pythonCommand, ["../scripts/cooking_events.py", "test"]);
   const log = await new Promise((resolve, reject) => {
     python.stdout.on("data", async function (data) {
@@ -82,4 +82,18 @@ it("Create event", async () => {
   expect(log.usefulEnergy * 1).toBeCloseTo(0.09, 2);
   expect(log.usefulThermalPower * 1).toBeCloseTo(0.76, 2);
   expect(log.energySavings * 1).toBeCloseTo(0.04, 2);
+});
+
+it("Update event on device update", async () => {
+  await request
+    .put(`/devices/${device.id}`)
+    .send({ baselineEfficiency: 90, stoveEfficiency: 60 })
+    .set("Authorization", `Bearer ${token}`);
+  const { body } = await request
+    .get(`/events/${device.id}`)
+    .set("Authorization", `Bearer ${token}`);
+  const event = body.rows[0];
+  expect(event.usefulEnergy * 1).toBeCloseTo(0.11, 2);
+  expect(event.usefulThermalPower * 1).toBeCloseTo(0.91, 2);
+  expect(event.energySavings * 1).toBeCloseTo(0.02, 2);
 });

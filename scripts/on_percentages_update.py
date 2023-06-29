@@ -43,8 +43,6 @@ query = "SELECT cp.id, \
             FROM Cooking_Percentages AS cp \
             LEFT JOIN Devices ON devices.id = cp.deviceId \
             WHERE \
-            cp.updatedAt != cp.createdAt \
-            AND \
             cp.updatedAt > UTC_TIMESTAMP() - INTERVAL 30 SECOND;"
 
 cursor.execute(query)
