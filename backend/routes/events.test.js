@@ -74,6 +74,7 @@ it("Create event", async () => {
   });
 
   expect(log.duration).toBe(420);
+  expect(log.foodMass * 1).toBe(8.6174);
   expect(log.totalFuelMass * 1).toBeCloseTo(0.04, 2);
   expect(log.averageTemperature * 1).toBeCloseTo(139.9, 2);
   expect(log.maximumTemperature * 1).toBeCloseTo(168.63, 2);
@@ -87,12 +88,17 @@ it("Create event", async () => {
 it("Update event on device update", async () => {
   await request
     .put(`/devices/${device.id}`)
-    .send({ baselineEfficiency: 90, stoveEfficiency: 60 })
+    .send({
+      baselineEfficiency: 90,
+      stoveEfficiency: 60,
+      maximumCookingLoad: 12,
+    })
     .set("Authorization", `Bearer ${token}`);
   const { body } = await request
     .get(`/events/${device.id}`)
     .set("Authorization", `Bearer ${token}`);
   const event = body.rows[0];
+  expect(event.foodMass * 1).toBe(9.4008);
   expect(event.usefulEnergy * 1).toBeCloseTo(0.11, 2);
   expect(event.usefulThermalPower * 1).toBeCloseTo(0.91, 2);
   expect(event.energySavings * 1).toBeCloseTo(0.02, 2);

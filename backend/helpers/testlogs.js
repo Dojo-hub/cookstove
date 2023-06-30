@@ -11,7 +11,7 @@ const getDate = (timestamp) => {
   const month = currentDate.getMonth();
   const day = currentDate.getDate();
 
-  const date = new Date(year, month, day, hours, minutes, seconds);
+  const date = new Date(year, month, day + 1, hours, minutes, seconds);
 
   return date.getTime() / 1000;
 };

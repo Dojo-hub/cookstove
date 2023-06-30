@@ -105,6 +105,7 @@ export default function UpdateDevice() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
+  const [updatedFields, setUpdatedFields] = useState({});
 
   const formik = useFormik({
     initialValues: device,
@@ -121,6 +122,11 @@ export default function UpdateDevice() {
       }
     },
   });
+
+  const handleChange = (e) => {
+    formik.handleChange(e);
+    setUpdatedFields((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   useEffect(() => {
     if (device) {
@@ -150,7 +156,7 @@ export default function UpdateDevice() {
                 name={field.name}
                 label={field.label}
                 required
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 value={formik.values[field.name] || ""}
               >
                 {field.options.map((option) => (
@@ -171,7 +177,7 @@ export default function UpdateDevice() {
           name={field.name}
           label={field.label}
           required
-          onChange={formik.handleChange}
+          onChange={handleChange}
           value={formik.values[field.name] || ""}
         />
       );

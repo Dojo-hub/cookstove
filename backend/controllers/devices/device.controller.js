@@ -183,7 +183,37 @@ const updateOne = async (req, res) => {
   const { id } = req.params;
   const transaction = await sequelize.transaction();
   try {
-    const { baselineEfficiency, stoveEfficiency } = req.body;
+    const { baselineEfficiency, stoveEfficiency, maximumCookingLoad } =
+      req.body;
+    // TODO: recalculate foodMass when maximumCookingLoad changes
+    if (maximumCookingLoad) {
+      let ml = parseFloat(maximumCookingLoad);
+      const cookingPercentages = await Cooking_Percentages.findAll({
+        where: { deviceId: id },
+        order: [["startDate", "ASC"]],
+      });
+      for (let i = 0; i < cookingPercentages.length; i++) {
+        const percentage = cookingPercentages[i];
+        const nextRow = cookingPercentages[i + 1];
+        let endDate = new Date("9999-12-31");
+        if (nextRow) endDate = nextRow.startDate;
+        const { startDate, fullLoad, twoThirdsLoad, halfLoad } = percentage;
+        const foodMass =
+          (fullLoad / 100) * ml +
+          (twoThirdsLoad / 100) * ml * 0.667 +
+          (halfLoad / 100) * ml * 0.5;
+        await Cooking_Events.update(
+          { foodMass },
+          {
+            where: {
+              deviceId: id,
+              startDate: { [Op.between]: [startDate, endDate] },
+            },
+            transaction,
+          }
+        );
+      }
+    }
     if (baselineEfficiency || stoveEfficiency) {
       // recalculate usefulEnergy, usefulThermalPower, and energySavings for all device events
       const efficiency = parseFloat(stoveEfficiency) / 100;
@@ -191,7 +221,7 @@ const updateOne = async (req, res) => {
       const events = await Cooking_Events.findAll({ where: { deviceId: id } });
       for (let i = 0; i < events.length; i++) {
         const event = events[i];
-        const { energyConsumption, id, power } = event;
+        const { energyConsumption, id: eventId, power } = event;
         if (!energyConsumption || !power) continue;
         const usefulEnergy = energyConsumption * efficiency;
         const usefulThermalPower = power * efficiency;
@@ -202,7 +232,7 @@ const updateOne = async (req, res) => {
             usefulThermalPower,
             energySavings,
           },
-          { where: { id }, transaction }
+          { where: { id: eventId }, transaction }
         );
       }
     }
@@ -211,7 +241,7 @@ const updateOne = async (req, res) => {
       returning: true,
       transaction,
     });
-    transaction.commit();
+    await transaction.commit();
     const device = await Device.findOne({ where: { id } });
     res.status(201).send({ device });
   } catch (error) {

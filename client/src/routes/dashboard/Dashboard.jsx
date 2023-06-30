@@ -1,5 +1,6 @@
 import { Grid, Stack, Typography } from "@mui/material";
 import MuiCard from "@mui/material/Card";
+import { useNavigate } from "react-router-dom";
 import MuiSkeleton from "@mui/material/Skeleton";
 import PeopleIcon from "@mui/icons-material/People";
 import DevicesOtherIcon from "@mui/icons-material/DevicesOther";
@@ -7,10 +8,11 @@ import { useEffect, useState } from "react";
 import { getPlatformStats } from "../../api/stats";
 import CookstoveData from "../../components/CookstoveData";
 
-const Card = (props) => <MuiCard sx={{ p: 4 }} {...props} />;
+const Card = (props) => <MuiCard sx={{ p: 4, cursor: "pointer" }} {...props} />;
 const Skeleton = () => <MuiSkeleton height={56} width={240} />;
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -36,7 +38,7 @@ export default function Dashboard() {
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Card>
+          <Card onClick={() => navigate("/devices")}>
             <Stack direction="row" spacing={4} alignItems="center">
               <DevicesOtherIcon sx={{ fontSize: "6em" }} />
               <div>
@@ -51,7 +53,7 @@ export default function Dashboard() {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Card>
+          <Card onClick={() => navigate("/users")}>
             <Stack direction="row" spacing={4} alignItems="center">
               <PeopleIcon sx={{ fontSize: "6em" }} />
               <div>
