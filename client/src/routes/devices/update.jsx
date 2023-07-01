@@ -112,7 +112,10 @@ export default function UpdateDevice() {
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        const { data } = await updateDevice(values);
+        const { data } = await updateDevice({
+          id: values.id,
+          ...updatedFields,
+        });
         setLoading(false);
         setDevice(data.device);
         setSearchParams({ name: searchParams.get("name"), tab: 1 });

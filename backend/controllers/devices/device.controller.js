@@ -185,7 +185,6 @@ const updateOne = async (req, res) => {
   try {
     const { baselineEfficiency, stoveEfficiency, maximumCookingLoad } =
       req.body;
-    // TODO: recalculate foodMass when maximumCookingLoad changes
     if (maximumCookingLoad) {
       let ml = parseFloat(maximumCookingLoad);
       const cookingPercentages = await Cooking_Percentages.findAll({

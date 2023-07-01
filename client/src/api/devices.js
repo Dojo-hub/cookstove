@@ -36,7 +36,6 @@ export function updateCookingPercentages(id, data) {
 }
 
 export function updateDevice({ id, ...rest }) {
-  delete rest.userID;
   return axiosInstance.put(`/${id}`, { ...rest });
 }
 

@@ -9,13 +9,14 @@ export default function UpdateUser({ user }) {
   const [change, setChange] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [updatedFields, setUpdatedFields] = useState({});
 
   const formik = useFormik({
     initialValues: user,
     onSubmit: async (values) => {
       try {
         setLoading(true);
-        await updateUser(values);
+        await updateUser({ id: values.id, ...updatedFields });
         setLoading(false);
         window.location.reload();
       } catch (error) {
@@ -24,6 +25,11 @@ export default function UpdateUser({ user }) {
       }
     },
   });
+
+  const handleChange = (e) => {
+    formik.handleChange(e);
+    setUpdatedFields({ ...updatedFields, [e.target.name]: e.target.value });
+  };
 
   useEffect(() => {
     if (JSON.stringify(user) === JSON.stringify(formik.values))
@@ -43,7 +49,7 @@ export default function UpdateUser({ user }) {
                 name="userName"
                 label="User Name"
                 required
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 value={formik.values.userName}
               />
             </Grid>
@@ -53,7 +59,7 @@ export default function UpdateUser({ user }) {
                 name="firstName"
                 label="First Name"
                 required
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 value={formik.values.firstName}
               />
             </Grid>
@@ -63,7 +69,7 @@ export default function UpdateUser({ user }) {
                 name="lastName"
                 label="Last Name"
                 required
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 value={formik.values.lastName}
               />
             </Grid>
@@ -73,7 +79,7 @@ export default function UpdateUser({ user }) {
                 name="email"
                 label="Email"
                 required
-                onChange={formik.handleChange}
+                onChange={handleChange}
                 value={formik.values.email}
               />
             </Grid>
