@@ -106,9 +106,9 @@ export default function DeviceEventsTable({ deviceId }) {
   }, [deviceId, reload, page]);
 
   return (
-    <Box mt={2}>
-      <Typography variant="h6">Cooking Events</Typography>
-      <Box sx={{ width: "100%" }}>
+    <Box mt={4}>
+      <Typography variant="h5">Cooking Events</Typography>
+      <Box sx={{ width: "100%", mt: 1 }}>
         <DataGrid
           sx={{
             cursor: "pointer",

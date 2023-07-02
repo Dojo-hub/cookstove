@@ -100,7 +100,9 @@ export default function Users() {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h3">Users</Typography>
+        <Typography variant="h4" mb={2}>
+          Users
+        </Typography>
         <Button
           onClick={() => setOpen(true)}
           variant="contained"

@@ -48,7 +48,7 @@ const items = [
   {
     id: 5,
     icon: <AccessTimeIcon sx={{ fontSize: "6em" }} />,
-    title: "Cumulative cooking duration in hours",
+    title: "Cumulative cooking duration",
     key: "sumDuration",
     symbol: "h",
   },
@@ -109,7 +109,7 @@ const Item = ({ icon, loading, symbol, title, value }) => (
               {value} {symbol}
             </Typography>
           )}
-          <Typography ml={1 / 2} variant="h6">
+          <Typography ml={1 / 2} variant="h6" color="gray">
             {title}
           </Typography>
         </div>

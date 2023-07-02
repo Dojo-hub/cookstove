@@ -4,7 +4,6 @@ import Login from "./login";
 import { Devices, Details } from "./devices";
 import { UserDetails, Users } from "./users";
 import Dashboard from "./dashboard/Dashboard";
-import Profile from "./profile";
 import Analytics from "./analytics/Analytics";
 
 export default function Routes() {
@@ -22,10 +21,6 @@ export default function Routes() {
         {
           path: "dashboard",
           element: <Dashboard />,
-        },
-        {
-          path: "profile",
-          element: <Profile />,
         },
         {
           path: "devices",

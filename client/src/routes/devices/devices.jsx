@@ -95,7 +95,7 @@ export default function Devices() {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Typography variant="h3">Devices</Typography>
+        <Typography variant="h4">Devices</Typography>
         <Button
           onClick={() => setOpen(true)}
           variant="contained"
@@ -104,7 +104,7 @@ export default function Devices() {
           Add Device
         </Button>
       </Stack>
-      <Box sx={{ width: "100%" }}>
+      <Box sx={{ width: "100%", mt: 2 }}>
         <DataGrid
           rows={rows}
           columns={columns}

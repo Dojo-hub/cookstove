@@ -16,6 +16,11 @@ const { RangePicker } = DatePicker;
 const today = dayjs();
 const threemonthsago = dayjs().subtract(3, "month");
 
+const changeLabel = (groupBy) => {
+  if (groupBy === "month") return "monthly";
+  return "daily";
+};
+
 export default function Analytics() {
   const [loading, setLoading] = useState(true);
   const [dates, setDates] = useState([
@@ -72,7 +77,7 @@ export default function Analytics() {
           control={
             <Switch checked={groupBy == "month"} onClick={handleClick} />
           }
-          label={groupBy}
+          label={changeLabel(groupBy) + " data"}
         />
       </FormGroup>
       <Charts data={data} loading={loading} groupBy={groupBy} />
